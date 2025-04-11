@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -35,23 +36,30 @@ const formSchema = z
     }
   );
 
+type FormData = z.infer<typeof formSchema>
+
 export default function PostUserName() {
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
     },
   })
 
-  const onSubmit = async (data: any) => {
+  const router = useRouter();
+
+  const onSubmit = async (data: FormData) => {
+
+    const { username } = data
 
     await fetch("/api/me/username", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: data.username }),
+      body: JSON.stringify({ username }),
     });
 
+    router.push(`/${username}`)
   };
 
   return (
