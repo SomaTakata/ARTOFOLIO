@@ -25,7 +25,7 @@ const formSchema = z
   })
   .refine(
     async (data) => {
-      const res = await fetch(`/api/check-username?username=${data.username}`);
+      const res = await fetch(`/api/username/check?username=${data.username}`);
       const json = await res.json();
       return json.available;
     },
@@ -46,7 +46,7 @@ export default function PostUserName() {
 
   const onSubmit = async (data: any) => {
 
-    await fetch("/api/set-username", {
+    await fetch("/api/me/username", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: data.username }),

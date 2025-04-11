@@ -1,9 +1,9 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { UsernameInputSchema, UsernameSchema } from "../models/user.schema";
+import { UserCheckQuerySchema, UsernameInputSchema, UsernameSchema } from "../models/user.schema";
 import { ErrorSchema } from "../models/error.schema";
 
 export const getUsernameRoute = createRoute({
-  path: "/username",
+  path: "/",
   method: "get",
   description: "ユーザー名の取得",
   responses: {
@@ -27,7 +27,7 @@ export const getUsernameRoute = createRoute({
 })
 
 export const setUsernameRoute = createRoute({
-  path: "/username",
+  path: "/",
   method: "post",
   description: "ユーザー名の設定",
   request: {
@@ -56,7 +56,7 @@ export const setUsernameRoute = createRoute({
         }
       }
     },
-    409:{
+    409: {
       description: "ユーザー名がすでに使用されています",
       content: {
         "application/json": {
@@ -64,5 +64,26 @@ export const setUsernameRoute = createRoute({
         }
       }
     }
+  }
+})
+
+export const checkUsernameRoute = createRoute({
+  path: "/",
+  method: "get",
+  description: "ユーザー名の重複チェック",
+  request: {
+    query: UserCheckQuerySchema
+  },
+  responses: {
+    200: {
+      description: "取得成功",
+      content: {
+        "application/json": {
+          schema: z.object({
+            available: z.boolean()
+          })
+        }
+      }
+    },
   }
 })

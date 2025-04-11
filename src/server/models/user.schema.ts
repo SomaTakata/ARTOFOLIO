@@ -1,5 +1,6 @@
 import { user } from '@/db/schema';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
 export const UserSelectSchema = createSelectSchema(user)
 export const UserInputSchema = createInsertSchema(user, {
@@ -12,4 +13,8 @@ export const UsernameSchema = UserSelectSchema.pick({
 
 export const UsernameInputSchema = UserInputSchema.pick({
   username: true
+})
+
+export const UserCheckQuerySchema = z.object({
+  username: z.string()
 })
