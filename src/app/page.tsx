@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { signIn } from "@/lib/auth-client";
 
 export default function Page() {
-    return (
-        <Button onClick={() => signIn()} type="button" variant="ghost">
-          ボタン
-        </Button>
-    );
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <Button onClick={() => signIn()} type="button" variant="outline">
+        Sign In With Google
+      </Button>
+    </div>
+  );
 }
