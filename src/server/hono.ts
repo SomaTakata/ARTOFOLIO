@@ -1,6 +1,6 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { getUsernameHandler, setUsernameHandler } from "./controllers/user.controller";
-import { getUsernameRoute, setUsernameRoute } from "./routes/user.route";
+import { checkUsernameHandler, getUsernameHandler, setUsernameHandler } from "./controllers/user.controller";
+import { checkUsernameRoute, getUsernameRoute, setUsernameRoute } from "./routes/user.route";
 import { swaggerUI } from "@hono/swagger-ui";
 
 export const app = new OpenAPIHono().basePath("/api");
@@ -9,8 +9,12 @@ const userApp = new OpenAPIHono()
   .openapi(getUsernameRoute, getUsernameHandler)
   .openapi(setUsernameRoute, setUsernameHandler)
 
+const checkUserApp = new OpenAPIHono()
+  .openapi(checkUsernameRoute, checkUsernameHandler)
+
 const mainApp = new OpenAPIHono()
-  .route("/me", userApp)
+  .route("/me/username", userApp)
+  .route("/username/check", checkUserApp)
 
 const route = app.route("/", mainApp);
 

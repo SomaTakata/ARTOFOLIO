@@ -1,5 +1,5 @@
 import { RouteHandler } from "@hono/zod-openapi";
-import { getUsernameRoute, setUsernameRoute } from "../routes/user.route";
+import { checkUsernameRoute, getUsernameRoute, setUsernameRoute } from "../routes/user.route";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { db } from "@/db";
@@ -34,7 +34,7 @@ export const getUsernameHandler: RouteHandler<typeof getUsernameRoute> = async (
 
 export const setUsernameHandler: RouteHandler<typeof setUsernameRoute> = async (c) => {
   const { username } = c.req.valid("json");
-  
+
   const session = await auth.api.getSession({
     headers: await headers()
   })
@@ -67,3 +67,20 @@ export const setUsernameHandler: RouteHandler<typeof setUsernameRoute> = async (
   return c.json({ username: username }, 201);
 }
 
+export const checkUsernameHandler: RouteHandler<typeof checkUsernameRoute> = async (c) => {
+  const { username } = c.req.query()
+
+  if (!username) {
+    return c.json({ available: false });
+  }
+
+  const result = await db
+    .select()
+    .from(user)
+    .where(eq(user.username, username))
+    .limit(1);
+
+  const isAvailable = result.length === 0;
+
+  return c.json({ available: isAvailable }, 200);
+}
