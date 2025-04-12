@@ -1,3 +1,4 @@
+import { useLoader } from "@react-three/fiber";
 import Wall from "./Wall";
 import { usePlane } from "@react-three/cannon";
 import { TextureLoader } from "three";
@@ -7,9 +8,6 @@ import Arch from "./Arch";
 import Painting from "./Painting";
 import AreaTitle from "./AreaTitle";
 
-export const wallHeight = 24
-export const wallYPosition = wallHeight / 2
-export const wallThick = 5
 export const SCALE = 2;
 
 function Floor() {
@@ -42,6 +40,30 @@ function Ceiling() {
       <meshStandardMaterial color="#EDEDED" />
     </mesh>
   );
+}
+
+//壁の高さ
+export const wallHeight = 24
+export const wallYPosition = wallHeight / 2
+export const wallThick = 5
+
+function TopBoard({ SCALE }: { SCALE: number }) {
+  const picture = useTexture({ map: "/vercel.svg" })
+  const texture = picture.map
+
+  return (
+    <group>
+      <mesh position={[-30 * SCALE, 20 * SCALE, -30 * SCALE + (wallThick + 0.3)]}>
+        <planeGeometry args={[173 / 50 * SCALE, 150 / 50 * SCALE]} />
+        <meshStandardMaterial map={texture} />
+      </mesh>
+
+      <mesh position={[-30 * SCALE, 20 * SCALE, -30 * SCALE]} rotation={[0, -Math.PI, 0]}>
+        <boxGeometry args={[30 * SCALE, 8 * SCALE, wallThick * SCALE]} />
+        <meshStandardMaterial color="black" />
+      </mesh>
+    </group>
+  )
 }
 
 export default function Room() {
@@ -235,7 +257,6 @@ export default function Room() {
         height={wallHeight * SCALE}
         depth={0.1 * SCALE}
       />
-
 
       {/* 最初の壁 */}
       <Wall
