@@ -7,24 +7,25 @@ import { useEffect } from "react";
 import Arch from "./Arch";
 import Painting from "./Painting";
 import AreaTitle from "./AreaTitle";
+import Floor from "./Floor";
 
 export const SCALE = 2;
 
-function Floor() {
-  // 床は xz 平面に対して静的な平面ボディとして定義
-  const [ref] = usePlane(() => ({
-    type: "Static",
-    rotation: [-Math.PI / 2, 0, 0],
-    position: [0, 0, 0],
-  }));
+// function Floor() {
+//   // 床は xz 平面に対して静的な平面ボディとして定義
+//   const [ref] = usePlane(() => ({
+//     type: "Static",
+//     rotation: [-Math.PI / 2, 0, 0],
+//     position: [0, 0, 0],
+//   }));
 
-  return (
-    <mesh ref={ref}>
-      <planeGeometry args={[90 * SCALE, 120 * SCALE]} />
-      <meshStandardMaterial color="#4A4A4A" />
-    </mesh>
-  );
-}
+//   return (
+//     <mesh ref={ref}>
+//       <planeGeometry args={[90 * SCALE, 120 * SCALE]} />
+//       <meshStandardMaterial color="#4A4A4A" />
+//     </mesh>
+//   );
+// }
 
 function Ceiling() {
   // 天井は下を向いている平面ボディ
