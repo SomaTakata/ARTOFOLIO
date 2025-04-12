@@ -6,16 +6,16 @@ import { SpotLight } from "@react-three/drei";
 const SCALE = 2;
 
 export default function Floor() {
-  // 石タイル風のシェーダーマテリアルを作成
-  const stoneTileMaterial = useMemo(() => {
-    // 継ぎ目の色（明るめのグレー）
-    const groutColor = new THREE.Color(0xe0e0e0);
+  // 画像テクスチャの代わりにシェーダーマテリアルでタイル模様を作成
+  const stoneTiledMaterial = useMemo(() => {
+    // 継ぎ目の色（ライトグレー）- 画像に合わせて明るめの色に
+    const groutColor = new THREE.Color(0xd3d5d2);
 
-    // タイルの色（ダークグレー）
-    const tileColor = new THREE.Color(0x666666);
+    // タイルの色（ダークグレー）- 画像のような暗めの色に
+    const tileColor = new THREE.Color(0xa1a3a6);
 
-    // ハイライト色（少し明るめのタイルの色）
-    const highlightColor = new THREE.Color(0x888888);
+    // タイルの質感用のハイライト（少し明るめのダークグレー）
+    const highlightColor = new THREE.Color(0xc0c0c0);
 
     // カスタムシェーダーマテリアル
     return new THREE.ShaderMaterial({
@@ -23,10 +23,11 @@ export default function Floor() {
         groutColor: { value: groutColor },
         tileColor: { value: tileColor },
         highlightColor: { value: highlightColor },
-        numTiles: { value: 40.0 }, // タイルの数
-        groutWidth: { value: 0.03 }, // 継ぎ目の幅
-        noiseScale: { value: 50.0 }, // ノイズのスケール（石の質感）
-        noiseStrength: { value: 0.2 }, // ノイズの強さ
+        numTiles: { value: 80.0 }, // タイルの数を調整
+        groutWidth: { value: 0.015 }, // 継ぎ目の幅を画像に合わせて調整
+        noiseScale: { value: 50.0 }, // ノイズのスケール
+        noiseStrength: { value: 0.2 }, // ノイズの強さを調整
+        time: { value: 0.0 },
       },
       vertexShader: `
         varying vec2 vUv;
@@ -46,78 +47,68 @@ export default function Floor() {
         uniform float groutWidth;
         uniform float noiseScale;
         uniform float noiseStrength;
-        
+        uniform float time;
         varying vec2 vUv;
         varying vec3 vPosition;
         
-        // 乱数生成関数
+        // 簡易的なノイズ関数
         float random(vec2 st) {
           return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
         }
         
-        // 値をブレンドするノイズ関数
+        // 値をブレンドするための関数
         float noise(vec2 st) {
           vec2 i = floor(st);
           vec2 f = fract(st);
           
-          // 4点をサンプリングして補間
+          // ブレンド用の4点をサンプリング
           float a = random(i);
           float b = random(i + vec2(1.0, 0.0));
           float c = random(i + vec2(0.0, 1.0));
           float d = random(i + vec2(1.0, 1.0));
           
-          // スムーズ補間
+          // スムーズな補間
           vec2 u = f * f * (3.0 - 2.0 * f);
           
+          // 4点の値をブレンド
           return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
         }
         
-        // 石タイルのグリッド描画
-        float stoneTileGrid(vec2 uv, float numTiles, float lineWidth) {
-          // グリッド座標
-          vec2 gridUv = fract(uv * numTiles);
+        // 連続した継ぎ目を作成するための関数
+        float continuousGrout(vec2 uv, float numTiles, float width) {
+          // タイルのグリッド線を計算
+          vec2 gridLines = abs(fract(uv * numTiles) - 0.5) * 2.0;
           
-          // 線の太さを持つX方向とY方向のマスク
-          float xLine = step(0.0, gridUv.x) * step(gridUv.x, lineWidth) + 
-                       step(1.0 - lineWidth, gridUv.x) * step(gridUv.x, 1.0);
-          float yLine = step(0.0, gridUv.y) * step(gridUv.y, lineWidth) + 
-                       step(1.0 - lineWidth, gridUv.y) * step(gridUv.y, 1.0);
+          // X方向とY方向の継ぎ目のマスク（値が小さいほど継ぎ目に近い）
+          float xGrout = smoothstep(0.0, width * 2.0, gridLines.x);
+          float yGrout = smoothstep(0.0, width * 2.0, gridLines.y);
           
-          // どちらかの線が存在する場所を1.0として返す
-          return max(xLine, yLine);
+          // どちらかの方向が継ぎ目に近ければ、継ぎ目として扱う
+          return min(xGrout, yGrout);
         }
         
         void main() {
-          // タイルグリッドのマスク（1.0=継ぎ目, 0.0=タイル）
-          float gridMask = stoneTileGrid(vUv, numTiles, groutWidth);
+          // 新しい継ぎ目のマスク (0=継ぎ目, 1=タイル)
+          float mask = continuousGrout(vUv, numTiles, groutWidth);
           
-          // タイルごとのノイズ（石の個性を表現）
+          // 各タイルごとに異なるノイズ値を生成
           vec2 tileId = floor(vUv * numTiles);
-          float tileNoise = noise(tileId * 0.5) * noiseStrength;
+          float noiseValue = noise(tileId * 0.5) * noiseStrength;
           
-          // タイル内の細かいノイズ（石の質感）
-          float detailNoise = noise(vUv * noiseScale) * 0.1;
+          // タイル内の位置に基づいた微妙な変化
+          float inTileNoise = noise(vUv * noiseScale) * 0.1;
           
-          // タイルのフラクチャ（石のひび割れや不均一さ）
-          float fracture = noise(vUv * 5.0 + tileId) * 0.05;
+          // 遠近感を強調するための距離に基づく効果
+          float distanceFromCenter = length(vPosition.xz) / 200.0;
+          float perspectiveEffect = clamp(distanceFromCenter, 0.0, 1.0) * 0.2;
           
-          // タイル内の位置（エッジ効果用）
-          vec2 fromCenter = abs(fract(vUv * numTiles) - 0.5);
-          float edgeDistance = max(fromCenter.x, fromCenter.y);
-          float edgeEffect = smoothstep(0.4, 0.5, edgeDistance) * 0.1;
+          // タイルの端に近いほどハイライトを軽く付ける（控えめに）
+          vec2 gridUv = fract(vUv * numTiles);
+          float edgeHighlight = (1.0 - distance(gridUv, vec2(0.5))) * 0.15;
           
-          // 中心からの距離による効果（遠近感）
-          float distanceEffect = length(vPosition.xz) / 200.0;
-          distanceEffect = min(distanceEffect, 0.2);
-          
-          // 色調整の効果をすべて組み合わせる
-          float combinedEffect = tileNoise + detailNoise + fracture + edgeEffect + distanceEffect;
-          
-          // タイルの色（ベース色とハイライト色の混合）
-          vec3 stoneColor = mix(tileColor, highlightColor, combinedEffect);
-          
-          // 最終的な色（タイルか継ぎ目か）
-          vec3 finalColor = mix(stoneColor, groutColor, gridMask);
+          // 継ぎ目とタイルの色を混合
+          vec3 stoneColor = mix(tileColor, highlightColor, noiseValue + inTileNoise + edgeHighlight + perspectiveEffect);
+          vec3 finalColor = mix(groutColor, stoneColor, mask);
           
           gl_FragColor = vec4(finalColor, 1.0);
         }
@@ -125,7 +116,7 @@ export default function Floor() {
     });
   }, []);
 
-  // 床の物理ボディ
+  // 床は xz 平面に対して静的な平面ボディとして定義
   const [ref] = usePlane(() => ({
     type: "Static",
     rotation: [-Math.PI / 2, 0, 0],
@@ -134,18 +125,18 @@ export default function Floor() {
 
   return (
     <>
-      {/* 床メッシュ */}
+      {/* 床のメッシュ */}
       <mesh ref={ref} receiveShadow>
-        <planeGeometry args={[90 * SCALE, 120 * SCALE]} />
-        <primitive object={stoneTileMaterial} attach="material" />
+        <planeGeometry args={[200 * SCALE, 200 * SCALE]} />
+        <primitive object={stoneTiledMaterial} attach="material" />
       </mesh>
 
-      {/* 床を照らすライト */}
+      {/* スポットライトの位置と設定を調整 */}
       <SpotLight
         position={[50, 40, 50]}
         angle={0.6}
         penumbra={0.5}
-        intensity={2.5}
+        intensity={2.0}
         color="#ffffff"
         distance={150}
         castShadow
@@ -155,11 +146,24 @@ export default function Floor() {
         position={[-30, 40, -30]}
         angle={0.6}
         penumbra={0.6}
-        intensity={2.0}
+        intensity={1.8}
         color="#fffaf0"
         distance={150}
         castShadow
       />
+
+      <SpotLight
+        position={[0, 50, 60]}
+        angle={0.7}
+        penumbra={0.4}
+        intensity={1.5}
+        color="#f0f8ff"
+        distance={170}
+        castShadow
+      />
+
+      {/* 全体的な環境光（明るすぎないように調整） */}
+      <ambientLight intensity={0.6} color="#ffffff" />
     </>
   );
 }
