@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { GizmoHelper, GizmoViewport } from "@react-three/drei";
+import { GizmoHelper, GizmoViewport, OrbitControls } from "@react-three/drei";
 import Room from "@/components/Room";
 import { useEffect, useRef } from "react";
 import { Vector3 } from "three";
@@ -44,7 +44,7 @@ function Player() {
   const keyState = useKeyboardInput();
   const walkCycle = useRef(0);
   const yawRef = useRef(Math.PI / 2);
-  const initialPosition = new Vector3(80, 12, 90);
+  const initialPosition = new Vector3(80, 14, 90);
   const positionRef = useRef(initialPosition.clone());
 
   // Use a dynamic sphere instead of kinematic for proper collision detection
@@ -159,13 +159,13 @@ const Main = () => {
     <div style={{ width: "100%", height: "100vh" }}>
       <Canvas
         camera={{
-          position: [80, 12, 90],
+          position: [80, 14, 90],
           fov: 45,
           near: 0.1,
           far: 1000,
         }}
       >
-        <gridHelper args={[400, 400]} />
+        {/* <gridHelper args={[400, 400]} /> */}
         <ambientLight intensity={0.5} />
         <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
           <GizmoViewport />
