@@ -1,5 +1,5 @@
 import { RouteHandler } from "@hono/zod-openapi";
-import { checkUsernameRoute, getUsernameRoute, setUsernameRoute } from "../routes/user.route";
+import { checkUsernameRoute, getPortofolioRoute, getUsernameRoute, setUsernameRoute, updateIntroRoute } from "../routes/user.route";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { db } from "@/db";
@@ -83,4 +83,64 @@ export const checkUsernameHandler: RouteHandler<typeof checkUsernameRoute> = asy
   const isAvailable = result.length === 0;
 
   return c.json({ available: isAvailable }, 200);
+}
+
+export const getPortofolioHandler: RouteHandler<typeof getPortofolioRoute> = async (c) => {
+  const { username } = c.req.param();
+
+  const result = await db
+    .select()
+    .from(user)
+    .where(eq(user.username, username))
+    .limit(1);
+
+  if (result.length === 0) {
+    return c.json({ error: "Not Found" }, 404);
+  }
+
+  const {
+    name,
+    username: uname,
+    intro,
+    twitter,
+    github,
+    zenn,
+    qiita,
+  } = result[0];
+
+  return c.json(
+    {
+      name,
+      username: uname,
+      intro,
+      twitter,
+      github,
+      zenn,
+      qiita,
+    }, 200);
+};
+
+export const updateIntroHandler: RouteHandler<typeof updateIntroRoute> = async (c) => {
+  const { intro } = c.req.valid("json");
+
+  const session = await auth.api.getSession({
+    headers: await headers()
+  })
+
+  if (!session || !session.user?.id) {
+    throw Error("Unauthorized");
+  }
+
+  const userId = session.user.id;
+
+  if (!intro) {
+    return c.json({ error: "自己紹介を入力してください" }, 400);
+  }
+
+  await db
+    .update(user)
+    .set({ intro })
+    .where(eq(user.id, userId));
+
+  return c.json({ message: "成功" }, 200);
 }

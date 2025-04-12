@@ -4,7 +4,8 @@ import { z } from 'zod';
 
 export const UserSelectSchema = createSelectSchema(user)
 export const UserInputSchema = createInsertSchema(user, {
-  username: (schema) => schema.min(3).max(10)
+  username: (schema) => schema.min(3).max(10),
+  intro: (schema) => schema.min(1, { message: "一文字も入力されていません。" }).max(40, { message: "40文字以内で入力してください。" }),
 })
 
 export const UsernameSchema = UserSelectSchema.pick({
@@ -18,3 +19,19 @@ export const UsernameInputSchema = UserInputSchema.pick({
 export const UserCheckQuerySchema = z.object({
   username: z.string()
 })
+
+export const portofolioSchema = UserSelectSchema.pick({
+  name: true,
+  username: true,
+  intro: true,
+  twitter: true,
+  github: true,
+  zenn: true,
+  qiita: true
+})
+
+export const IntroInputSchema = UserInputSchema.pick({
+  intro: true
+})
+
+export type profileSchemaType = z.infer<typeof portofolioSchema>
