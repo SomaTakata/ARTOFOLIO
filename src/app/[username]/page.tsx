@@ -43,8 +43,8 @@ const useKeyboardInput = () => {
 function Player() {
   const keyState = useKeyboardInput();
   const walkCycle = useRef(0);
-  const yawRef = useRef(0);
-  const initialPosition = new Vector3(20, 12, 20);
+  const yawRef = useRef(Math.PI / 2);
+  const initialPosition = new Vector3(80, 12, 90);
   const positionRef = useRef(initialPosition.clone());
 
   // Use a dynamic sphere instead of kinematic for proper collision detection
@@ -69,7 +69,7 @@ function Player() {
   }, [api.position]);
 
   useFrame((state, delta) => {
-    const movementSpeed = 10;
+    const movementSpeed = 10 * 3;
     const rotationSpeed = Math.PI;
 
     // Update yaw from keyboard input
@@ -149,7 +149,7 @@ function Player() {
 
   return (
     <mesh ref={ref}>
-      <sphereGeometry args={[0.5, 32, 32]} />
+      <sphereGeometry args={[0.5 * 3, 32, 32]} />
     </mesh>
   );
 }
@@ -159,13 +159,13 @@ const Main = () => {
     <div style={{ width: "100%", height: "100vh" }}>
       <Canvas
         camera={{
-          position: [20, 12, 20],
+          position: [80, 12, 90],
           fov: 45,
           near: 0.1,
           far: 1000,
         }}
       >
-        <gridHelper args={[50, 50]} />
+        <gridHelper args={[400, 400]} />
         <ambientLight intensity={0.5} />
         <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
           <GizmoViewport />
