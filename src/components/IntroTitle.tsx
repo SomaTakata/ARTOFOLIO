@@ -1,7 +1,6 @@
 import { Text } from "@react-three/drei";
-import { SCALE, wallYPosition } from "./Room";
 
-export default function AreaTitle({
+export default function IntroTitle({
   titlePositon = [0, 0, 0],
   titleRotation = [0, 0, 0],
   descPoisiton = [0, 0, 0],
@@ -25,7 +24,6 @@ export default function AreaTitle({
         rotation={titleRotation}
         color={color}        // テキストの色
         fontSize={5}         // フォントサイズ
-        maxWidth={100}
         fontWeight={700}       // 最大幅
         lineHeight={1.2}     // 行間
         anchorX="left"     // X方向のアンカー位置
@@ -37,7 +35,7 @@ export default function AreaTitle({
         rotation={descRotation}
         color={color}      // テキストの色
         fontSize={2}         // フォントサイズ
-        maxWidth={100}
+        maxWidth={50}
         fontWeight={400}       // 最大幅
         lineHeight={1.2}     // 行間
         anchorX="left"     // X方向のアンカー位置

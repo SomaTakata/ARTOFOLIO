@@ -8,6 +8,7 @@ export const user = pgTable("user", {
        emailVerified: boolean('email_verified').notNull(),
        image: text('image'),
        username: text('username').unique(),
+       intro: text('intro').notNull().default("ppppp"),
        twitter: text('twitter').unique(),
        github: text('github').unique(),
        zenn: text('zenn').unique(),
