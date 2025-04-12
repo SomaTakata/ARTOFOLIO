@@ -47,19 +47,32 @@ function Player() {
   const initialPosition = new Vector3(20, 12, 20);
   const positionRef = useRef(initialPosition.clone());
 
-  // useSphere の ref をメッシュに割り当てるため、物理ボディと同期させる
+  // Use a dynamic sphere instead of kinematic for proper collision detection
   const [ref, api] = useSphere(() => ({
-    type: "Kinematic",
+    mass: 1, // Give it mass so it responds to physics
     position: [initialPosition.x, initialPosition.y, initialPosition.z],
-    args: [0.5], // 衝突判定用の半径。必要に応じてサイズ調整
-    fixedRotation: true,
+    args: [0.5], // Collision radius
+    fixedRotation: true, // Prevent rolling
+    linearDamping: 0.95, // Add some drag to stop sliding
+    onCollide: (e) => {
+      // Optional: Handle collision events (e.g. play sound, visual feedback)
+      console.log("Collision detected:", e.body);
+    },
   }));
 
-  useFrame((state, delta) => {
-    const movementSpeed = 10;       // 移動速度（単位/秒）
-    const rotationSpeed = Math.PI;  // 回転速度（ラジアン/秒）
+  // Subscribe to position changes from the physics engine
+  useEffect(() => {
+    const unsubscribe = api.position.subscribe((p) => {
+      positionRef.current.set(p[0], p[1], p[2]);
+    });
+    return unsubscribe;
+  }, [api.position]);
 
-    // キー入力から yaw（左右回転）の更新
+  useFrame((state, delta) => {
+    const movementSpeed = 10;
+    const rotationSpeed = Math.PI;
+
+    // Update yaw from keyboard input
     let yaw = yawRef.current;
     if (keyState.current.ArrowLeft) {
       yaw += rotationSpeed * delta;
@@ -69,58 +82,74 @@ function Player() {
     }
     yawRef.current = yaw;
 
-    // yaw を元に前方ベクトルを計算（水平移動用）
+    // Calculate forward vector based on current yaw
     const forward = new Vector3(0, 0, -1)
       .applyAxisAngle(new Vector3(0, 1, 0), yaw)
       .normalize();
 
-    // 前進・後退の移動変位を算出
-    const displacement = new Vector3();
+    // Calculate desired velocity based on input
+    const velocity = new Vector3();
     if (keyState.current.ArrowUp) {
-      displacement.add(forward.clone().multiplyScalar(movementSpeed * delta));
+      velocity.add(forward.clone().multiplyScalar(movementSpeed * delta));
     }
     if (keyState.current.ArrowDown) {
-      displacement.add(forward.clone().multiplyScalar(-movementSpeed * delta));
+      velocity.add(forward.clone().multiplyScalar(-movementSpeed * delta));
     }
 
-    // ヘッドボービングによる上下の微妙な揺れ
-    const baseHeight = initialPosition.y;
+    // Apply velocity to the physics body
+    if (velocity.length() > 0) {
+      // Apply velocity directly through physics API
+      api.velocity.set(velocity.x / delta, 0, velocity.z / delta);
+    } else {
+      // Stop if no keys are pressed
+      api.velocity.set(0, 0, 0);
+    }
+
+    // Apply head bobbing if moving
     let bobbingOffset = 0;
     if (keyState.current.ArrowUp || keyState.current.ArrowDown) {
       walkCycle.current += delta * movementSpeed;
       const bobbingAmplitude = 0.07;
       const bobbingFrequency = 1;
-      bobbingOffset = Math.sin(walkCycle.current * bobbingFrequency) * bobbingAmplitude;
+      bobbingOffset =
+        Math.sin(walkCycle.current * bobbingFrequency) * bobbingAmplitude;
+
+      // Apply bobbing to the y position using the physics API
+      api.position.set(
+        positionRef.current.x,
+        initialPosition.y + bobbingOffset,
+        positionRef.current.z
+      );
     } else {
       walkCycle.current = 0;
+      // Reset height when not moving
+      api.position.set(
+        positionRef.current.x,
+        initialPosition.y,
+        positionRef.current.z
+      );
     }
 
-    // 自前で管理している位置に変位を加算（上下はヘッドボービングを反映）
-    positionRef.current.add(displacement);
-    positionRef.current.y = baseHeight + bobbingOffset;
-
-    // 物理ボディの位置を更新
-    api.position.set(
-      positionRef.current.x,
-      positionRef.current.y,
-      positionRef.current.z
+    // Update camera to follow player position with smooth lerp
+    state.camera.position.lerp(
+      new Vector3(
+        positionRef.current.x,
+        positionRef.current.y,
+        positionRef.current.z
+      ),
+      0.2
     );
 
-    // カメラを物理ボディに合わせてなめらかに追従
-    if (ref.current) {
-      state.camera.position.lerp(positionRef.current, 0.2);
-      state.camera.rotation.order = "YXZ";
-      state.camera.rotation.y = yaw;
-      state.camera.rotation.x = 0;
-      state.camera.rotation.z = 0;
-    }
+    // Update camera rotation
+    state.camera.rotation.order = "YXZ";
+    state.camera.rotation.y = yaw;
+    state.camera.rotation.x = 0;
+    state.camera.rotation.z = 0;
   });
 
-  // 物理ボディの参照をメッシュに渡すことで、衝突判定や描画の実態が生じます
   return (
     <mesh ref={ref}>
       <sphereGeometry args={[0.5, 32, 32]} />
-      <meshStandardMaterial color="orange" />
     </mesh>
   );
 }
