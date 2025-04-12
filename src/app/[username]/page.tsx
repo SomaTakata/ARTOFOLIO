@@ -149,7 +149,7 @@ function Player() {
 
   return (
     <mesh ref={ref}>
-      <sphereGeometry args={[0.5 * 3, 32, 32]} />
+      <sphereGeometry args={[0.5 * 10, 32, 32]} />
     </mesh>
   );
 }
