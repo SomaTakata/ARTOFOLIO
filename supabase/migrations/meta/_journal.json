@@ -29,6 +29,20 @@
       "when": 1744478655785,
       "tag": "0003_simple_legion",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1744490682838,
+      "tag": "0004_nostalgic_ultimo",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1744523106211,
+      "tag": "0005_tearful_loki",
+      "breakpoints": true
     }
   ]
 }

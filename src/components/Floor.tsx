@@ -1,7 +1,6 @@
 import { usePlane } from "@react-three/cannon";
 import * as THREE from "three";
 import { useMemo } from "react";
-import { SpotLight } from "@react-three/drei";
 
 const SCALE = 2;
 
@@ -125,45 +124,10 @@ export default function Floor() {
 
   return (
     <>
-      {/* 床のメッシュ */}
       <mesh ref={ref} receiveShadow>
         <planeGeometry args={[200 * SCALE, 200 * SCALE]} />
         <primitive object={stoneTiledMaterial} attach="material" />
       </mesh>
-
-      {/* スポットライトの位置と設定を調整 */}
-      <SpotLight
-        position={[50, 40, 50]}
-        angle={0.6}
-        penumbra={0.5}
-        intensity={2.0}
-        color="#ffffff"
-        distance={150}
-        castShadow
-      />
-
-      <SpotLight
-        position={[-30, 40, -30]}
-        angle={0.6}
-        penumbra={0.6}
-        intensity={1.8}
-        color="#fffaf0"
-        distance={150}
-        castShadow
-      />
-
-      <SpotLight
-        position={[0, 50, 60]}
-        angle={0.7}
-        penumbra={0.4}
-        intensity={1.5}
-        color="#f0f8ff"
-        distance={170}
-        castShadow
-      />
-
-      {/* 全体的な環境光（明るすぎないように調整） */}
-      <ambientLight intensity={0.6} color="#ffffff" />
     </>
   );
 }

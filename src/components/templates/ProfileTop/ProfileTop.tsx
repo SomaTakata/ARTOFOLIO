@@ -437,7 +437,7 @@ function ControlsUI({
 
 type Props = {
   username: string;
-  portofolio: profileSchemaType;
+  portofolio: ProfileWithTypedSkills;
 };
 
 const ProfileTop = ({ username, portofolio }: Props) => {

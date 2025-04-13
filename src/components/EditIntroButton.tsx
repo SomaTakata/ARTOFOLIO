@@ -1,3 +1,4 @@
+"use client"
 import { Html, Text } from "@react-three/drei";
 import { SCALE, wallYPosition } from "./Room";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";

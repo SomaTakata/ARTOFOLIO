@@ -1,5 +1,5 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { IntroInputSchema, portofolioSchema,  UserCheckQuerySchema,  UsernameInputSchema, UsernameSchema } from "../models/user.schema";
+import { IntroInputSchema, portofolioSchema,  SkillsSchema,  UserCheckQuerySchema,  UsernameInputSchema, UsernameSchema } from "../models/user.schema";
 import { ErrorSchema } from "../models/error.schema";
 
 export const getUsernameRoute = createRoute({
@@ -143,6 +143,41 @@ export const updateIntroRoute = createRoute({
     },
     400: {
       description: "自己紹介が未入力",
+      content: {
+        "application/json": {
+          schema: ErrorSchema
+        }
+      }
+    }
+  }
+})
+
+export const updateSkillsRoute = createRoute({
+  path: "/skills",
+  method: "put",
+  description: "スキルの更新",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: SkillsSchema
+        }
+      }
+    }
+  },
+  responses: {
+    200: {
+      description: "更新成功",
+      content: {
+        "application/json": {
+          schema: z.object({
+            message: z.string()   
+          })
+        }
+      }
+    },
+    400: {
+      description: "スキルが未入力",
       content: {
         "application/json": {
           schema: ErrorSchema

@@ -1,19 +1,12 @@
 import Wall from "./Wall";
-import { Html, Text, useTexture } from "@react-three/drei";
 import Arch from "./Arch";
-import Painting from "./Painting";
 import AreaTitle from "./AreaTitle";
 import Floor from "./Floor";
 import IntroTitle from "./IntroTitle";
-import { Button } from "./ui/button";
-import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
-import { profileSchemaType } from "@/server/models/user.schema";
-import { Textarea } from "./ui/textarea";
-import { useRouter } from "next/navigation";
+import { ProfileWithTypedSkills } from "@/server/models/user.schema";
 import { Ceiling } from "./Ceiling";
-import { Edit } from "lucide-react";
 import EditIntroButton from "./EditIntroButton";
+import EditSkillsButton from "./EditSkillsButton";
 
 export const SCALE = 2;
 export const wallHeight = 24
@@ -22,7 +15,7 @@ export const wallThick = 5
 
 type Props = {
   username: string;
-  portofolio: profileSchemaType;
+  portofolio: ProfileWithTypedSkills;
 };
 
 export default function Room({ username, portofolio }: Props) {
@@ -141,47 +134,55 @@ export default function Room({ username, portofolio }: Props) {
       />
 
       {/*青壁のスキル絵画 */}
-      <Painting
-        pictureUrl="/kaiga.jpg"
-        framePostion={[-45 * SCALE + 0.5, wallYPosition * SCALE, 120 - 26 - 24 - 23 - 24 - 23 - 12]}
-        frameRotation={[0, Math.PI * 0.5, 0]}
-        picturePosition={[-45 * SCALE + 1.1, wallYPosition * SCALE, 120 - 26 - 24 - 23 - 24 - 23 - 12]}
-        pictureRotation={[0, Math.PI * 0.5, 0]}
+      <EditSkillsButton
+        skills={portofolio.skills}
+        editNum={0}
+        portofolio={portofolio}
       />
 
-      <Painting
-        pictureUrl="/kaiga.jpg"
-        framePostion={[-45 * SCALE + 0.5, wallYPosition * SCALE, 120 - 26 - 24 - 23 - 12]}
+      <EditSkillsButton
+        skills={portofolio.skills}
+        editNum={1}
+        portofolio={portofolio}
+        framePosition={[-45 * SCALE + 0.5, wallYPosition * SCALE, 120 - 26 - 24 - 23 - 12]}
         frameRotation={[0, Math.PI * 0.5, 0]}
         picturePosition={[-45 * SCALE + 1.1, wallYPosition * SCALE, 120 - 26 - 24 - 23 - 12]}
         pictureRotation={[0, Math.PI * 0.5, 0]}
       />
 
-      <Painting
-        pictureUrl="/kaiga.jpg"
-        framePostion={[-45 * SCALE + 0.5, wallYPosition * SCALE, 120 - 26 - 12]}
+      <EditSkillsButton
+        skills={portofolio.skills}
+        editNum={2}
+        portofolio={portofolio}
+        framePosition={[-45 * SCALE + 0.5, wallYPosition * SCALE, 120 - 26 - 12]}
         frameRotation={[0, Math.PI * 0.5, 0]}
         picturePosition={[-45 * SCALE + 1.1, wallYPosition * SCALE, 120 - 26 - 12]}
         pictureRotation={[0, Math.PI * 0.5, 0]}
       />
 
       {/*ピンク壁のスキル絵画 */}
-      <Painting
-        pictureUrl="/kaiga.jpg"
-        framePostion={[-15 * SCALE - 0.5, wallYPosition * SCALE, 60 - 21 - 12]}
+      <EditSkillsButton
+        skills={portofolio.skills}
+        editNum={3}
+        portofolio={portofolio}
+        framePosition={[-15 * SCALE - 0.5, wallYPosition * SCALE, 60 - 21 - 12]}
         frameRotation={[0, -Math.PI * 0.5, 0]}
         picturePosition={[-15 * SCALE - 1.1, wallYPosition * SCALE, 60 - 21 - 12]}
         pictureRotation={[0, -Math.PI * 0.5, 0]}
-        frameColor="white"
+        color="white"
+        textColor="black"
       />
 
-      <Painting
-        pictureUrl="/kaiga.jpg"
-        framePostion={[-15 * SCALE - 0.5, wallYPosition * SCALE, 60 - 21 - 24 - 20 - 12]}
+      <EditSkillsButton
+        skills={portofolio.skills}
+        editNum={4}
+        portofolio={portofolio}
+        framePosition={[-15 * SCALE - 0.5, wallYPosition * SCALE, 60 - 21 - 24 - 20 - 12]}
         frameRotation={[0, -Math.PI * 0.5, 0]}
         picturePosition={[-15 * SCALE - 1.1, wallYPosition * SCALE, 60 - 21 - 24 - 20 - 12]}
         pictureRotation={[0, -Math.PI * 0.5, 0]}
-        frameColor="white"
+        color="white"
+        textColor="black"
       />
 
       <Arch
@@ -261,7 +262,7 @@ export default function Room({ username, portofolio }: Props) {
           45 * SCALE,
         ]}
       />
-      <ambientLight intensity={1} />
+      <ambientLight intensity={6} />
       {/* 天井 */}
       <Ceiling />
     </>
