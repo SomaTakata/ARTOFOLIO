@@ -6,11 +6,12 @@ import IntroTitle from "./IntroTitle";
 import { ProfileWithTypedSkills } from "@/server/models/user.schema";
 import { Ceiling } from "./Ceiling";
 import EditIntroButton from "./EditIntroButton";
-import EditSkillsButton from "./EditSkillsButton";
+import EditSkillsButton from "./EditLinksButton";
 import Painting from "./Painting";
 import WorkPreview from "./WorkPreview";
 import WorkOutline from "./WorkOutline";
 import Work from "./Work";
+import EditLinksButton from "./EditLinksButton";
 
 export const SCALE = 2;
 export const wallHeight = 24;
@@ -30,9 +31,17 @@ export default function Room({ username, portofolio }: Props) {
 
       {/* 左壁 */}
       <Wall
-        position={[0, wallYPosition * SCALE, -60 * SCALE]}
+        position={[-30, wallYPosition * SCALE, -60 * SCALE]}
         color="white"
-        width={90 * SCALE}
+        width={60 * SCALE}
+        height={wallHeight * SCALE}
+        depth={0.1 * SCALE}
+      />
+      {/* 左壁 LINK */}
+      <Wall
+        position={[60, wallYPosition * SCALE, -60 * SCALE]}
+        color="black"
+        width={30 * SCALE}
         height={wallHeight * SCALE}
         depth={0.1 * SCALE}
       />
@@ -69,7 +78,7 @@ export default function Room({ username, portofolio }: Props) {
 
       {/* 最初の壁 */}
       <Wall
-        position={[15 * SCALE, wallYPosition * SCALE, 30 * SCALE]}
+        position={[15 * SCALE, wallYPosition * SCALE, 30 * SCALE - 0.1]}
         rotation={[0, -Math.PI, 0]}
         color="white"
         width={60 * SCALE}
@@ -82,6 +91,7 @@ export default function Room({ username, portofolio }: Props) {
         position={[-15 * SCALE, wallYPosition * SCALE, 0]}
         rotation={[0, -Math.PI * 0.5, 0]}
         color="black"
+        backColor="black"
         width={60 * SCALE}
         height={wallHeight * SCALE}
         depth={0.1 * SCALE}
@@ -92,6 +102,7 @@ export default function Room({ username, portofolio }: Props) {
         position={[15 * SCALE, wallYPosition * SCALE, -30 * SCALE]}
         rotation={[0, -Math.PI * 0.5, 0]}
         color="black"
+        backColor="white"
         width={60 * SCALE}
         height={wallHeight * SCALE}
         depth={0.1 * SCALE}
@@ -272,10 +283,10 @@ export default function Room({ username, portofolio }: Props) {
         skills={portofolio.skills}
         editNum={3}
         portofolio={portofolio}
-        framePosition={[-15 * SCALE - 0.5, wallYPosition * SCALE, 60 - 21 - 12]}
+        framePosition={[-15 * SCALE - 0.8, wallYPosition * SCALE, 60 - 21 - 12]}
         frameRotation={[0, -Math.PI * 0.5, 0]}
         picturePosition={[
-          -15 * SCALE - 1.1,
+          -15 * SCALE - 1.5,
           wallYPosition * SCALE,
           60 - 21 - 12,
         ]}
@@ -289,17 +300,103 @@ export default function Room({ username, portofolio }: Props) {
         editNum={4}
         portofolio={portofolio}
         framePosition={[
-          -15 * SCALE - 0.5,
+          -15 * SCALE - 0.8,
           wallYPosition * SCALE,
           60 - 21 - 24 - 20 - 12,
         ]}
         frameRotation={[0, -Math.PI * 0.5, 0]}
         picturePosition={[
-          -15 * SCALE - 1.1,
+          -15 * SCALE - 1.5,
           wallYPosition * SCALE,
           60 - 21 - 24 - 20 - 12,
         ]}
         pictureRotation={[0, -Math.PI * 0.5, 0]}
+        color="white"
+        textColor="black"
+      />
+
+      {/* リンク 壁右側*/}
+      <EditLinksButton
+        skills={portofolio.skills}
+        editNum={3}
+        portofolio={portofolio}
+        framePosition={[
+          45 * SCALE - 0.5,
+          wallYPosition * SCALE,
+          -120 + 21 + 12,
+        ]}
+        frameRotation={[0, -Math.PI * 0.5, 0]}
+        picturePosition={[
+          45 * SCALE - 1.1,
+          wallYPosition * SCALE,
+          -120 + 21 + 12,
+        ]}
+        pictureRotation={[0, -Math.PI * 0.5, 0]}
+        color="black"
+        textColor="white"
+      />
+
+      <EditLinksButton
+        skills={portofolio.skills}
+        editNum={3}
+        portofolio={portofolio}
+        framePosition={[
+          45 * SCALE - 0.5,
+          wallYPosition * SCALE,
+          -120 + 21 + 12 + 20 + 24,
+        ]}
+        frameRotation={[0, -Math.PI * 0.5, 0]}
+        picturePosition={[
+          45 * SCALE - 1.1,
+          wallYPosition * SCALE,
+          -120 + 21 + 12 + 20 + 24,
+        ]}
+        pictureRotation={[0, -Math.PI * 0.5, 0]}
+        color="black"
+        textColor="white"
+      />
+      {/* リンク 壁左側*/}
+      <EditLinksButton
+        skills={portofolio.skills}
+        editNum={3}
+        portofolio={portofolio}
+        framePosition={[30 + 0.8, wallYPosition * SCALE, -120 + 21 + 12]}
+        frameRotation={[0, Math.PI * 0.5, 0]}
+        picturePosition={[30 + 1.5, wallYPosition * SCALE, -120 + 21 + 12]}
+        pictureRotation={[0, Math.PI * 0.5, 0]}
+        color="black"
+        textColor="white"
+      />
+
+      <EditLinksButton
+        skills={portofolio.skills}
+        editNum={3}
+        portofolio={portofolio}
+        framePosition={[
+          30 + 0.8,
+          wallYPosition * SCALE,
+          -120 + 21 + 12 + 20 + 24,
+        ]}
+        frameRotation={[0, Math.PI * 0.5, 0]}
+        picturePosition={[
+          30 + 1.5,
+          wallYPosition * SCALE,
+          -120 + 21 + 12 + 20 + 24,
+        ]}
+        pictureRotation={[0, Math.PI * 0.5, 0]}
+        color="black"
+        textColor="white"
+      />
+
+      {/* リンク 壁正面*/}
+      <EditLinksButton
+        skills={portofolio.skills}
+        editNum={3}
+        portofolio={portofolio}
+        framePosition={[60, wallYPosition * SCALE, -120 + 0.8]}
+        frameRotation={[0, 0, 0]}
+        picturePosition={[60, wallYPosition * SCALE, -120 + 1.5]}
+        pictureRotation={[0, 0, 0]}
         color="white"
         textColor="black"
       />

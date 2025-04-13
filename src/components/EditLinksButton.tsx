@@ -45,7 +45,7 @@ type Props = {
   pictureRotation?: [number, number, number];
 };
 
-export default function EditSkillsButton({
+export default function EditLinksButton({
   skills,
   editNum,
   portofolio,
