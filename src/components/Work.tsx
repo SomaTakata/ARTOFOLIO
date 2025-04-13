@@ -1,6 +1,7 @@
 import { Text, useTexture } from "@react-three/drei";
 import { useEffect, useState } from "react";
 import { Texture } from "three";
+import EditWorksButton from "./EditWorksButton";
 
 /**
  * ワーク（作品）を表示するためのコンポーネント
@@ -21,6 +22,7 @@ export default function Work({
   description = "Work description goes here.",
   titlePosition = [0, 0, 0],
   descriptionPosition = [0, 0, 0],
+  workIndex,
 }: {
   pictureUrl: string;
   framePosition?: [number, number, number];
@@ -33,6 +35,7 @@ export default function Work({
   description?: string;
   titlePosition?: [number, number, number];
   descriptionPosition?: [number, number, number];
+  workIndex: string,
 }) {
   // 画像のテクスチャをロード
   const picture = useTexture({
@@ -118,6 +121,14 @@ export default function Work({
           />
           <meshBasicMaterial map={picture.map} toneMapped={false} />
         </mesh>
+
+        <EditWorksButton
+          workIndex={workIndex}
+          title={title}
+          desc={description}
+          siteUrl={"/"}
+          position={[picturePosition[0], picturePosition[1] - 15, picturePosition[2]]}
+        />
       </group>
 
       {/* テキスト説明部分 */}

@@ -29,7 +29,7 @@ export const SkillSchema = z.object({
   level: z.string(),
 });
 
-export const workSchema = z.object({
+export const WorkSchema = z.object({
   title: z.string(),
   desc: z.string(),
   siteUrl: z.string(),
@@ -41,7 +41,7 @@ export const SkillsSchema = z.object({
 });
 
 export const WorksSchema = z.object({
-  works: z.array(workSchema)
+  works: z.array(WorkSchema)
 });
 
 export const portofolioSchema = UserSelectSchema.pick({
@@ -53,16 +53,17 @@ export const portofolioSchema = UserSelectSchema.pick({
   github: true,
   zenn: true,
   qiita: true,
+  works: true,
 }).extend({
   skills: SkillsSchema,
 });
 
 export const UpdateWorkPayloadSchema = z.object({
-  title: z.string(),
-  desc: z.string(),
+  title: z.string().min(1, { message: "何も入力されていません。" }).max(20, { message: "最大20文字までです。" }),
+  desc: z.string().min(1, { message: "何も入力されていません。" }).max(100, { message: "最大100文字までです。" }),
   siteUrl: z.string(),
-  // どの作品を更新するかを示す index（number型として扱う。フォーム送信では文字列になるので後で変換する）
   index: z.string(),
+  image: z.any().optional()
 });
 
 export const IntroInputSchema = UserInputSchema.pick({
@@ -71,7 +72,10 @@ export const IntroInputSchema = UserInputSchema.pick({
 
 export type profileSchemaType = z.infer<typeof portofolioSchema>
 export type SkillType = z.infer<typeof SkillSchema>
-export type WorkType = z.infer<typeof workSchema>
+export type WorkType = z.infer<typeof WorkSchema>
 export type ProfileWithTypedSkills = Omit<profileSchemaType, "skills"> & {
   skills: SkillType[];
+  works: WorkType[];
 };
+
+export type UpdateWorkPayloadSchemaType = z.infer<typeof UpdateWorkPayloadSchema>;

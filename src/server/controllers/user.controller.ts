@@ -109,6 +109,7 @@ export const getPortofolioHandler: RouteHandler<typeof getPortofolioRoute> = asy
     github,
     zenn,
     qiita,
+    works
   } = result[0];
 
   return c.json(
@@ -121,6 +122,7 @@ export const getPortofolioHandler: RouteHandler<typeof getPortofolioRoute> = asy
       github,
       zenn,
       qiita,
+      works
     }, 200);
 };
 
@@ -195,9 +197,12 @@ export const updateWorksHandler: RouteHandler<typeof updateWorksRoute> = async (
     if (file && file instanceof File) {
       const extension = file.type.split("/")[1];
       const filename = `works/${crypto.randomUUID()}.${extension}`;
+      // ここでファイルを ArrayBuffer に変換し、Node の Buffer に変換
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
       const { error } = await supabase.storage
         .from("works")
-        .upload(filename, file.stream(), {
+        .upload(filename, buffer, {
           contentType: file.type,
           upsert: true,
         });
@@ -220,7 +225,7 @@ export const updateWorksHandler: RouteHandler<typeof updateWorksRoute> = async (
     }
     const userId = session.user.id;
 
-    // 現在の works 配列を DB から取得
+    // DB から現在の works 配列を取得
     const currentUser = await db.query.user.findFirst({
       where: eq(user.id, userId),
     });
@@ -228,7 +233,7 @@ export const updateWorksHandler: RouteHandler<typeof updateWorksRoute> = async (
       return c.json({ error: "User not found" }, 404);
     }
 
-    const currentWorks = currentUser.works as WorkType[];
+    const currentWorks = Array.isArray(currentUser.works) ? currentUser.works : [];
     if (index < 0 || index >= currentWorks.length) {
       return c.json({ error: "無効な index です" }, 400);
     }
@@ -253,4 +258,3 @@ export const updateWorksHandler: RouteHandler<typeof updateWorksRoute> = async (
     return c.json({ error: "サーバー内部エラー" }, 500);
   }
 };
-

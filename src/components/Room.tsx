@@ -6,10 +6,7 @@ import IntroTitle from "./IntroTitle";
 import { ProfileWithTypedSkills } from "@/server/models/user.schema";
 import { Ceiling } from "./Ceiling";
 import EditIntroButton from "./EditIntroButton";
-import EditSkillsButton from "./EditLinksButton";
-import Painting from "./Painting";
-import WorkPreview from "./WorkPreview";
-import WorkOutline from "./WorkOutline";
+import EditSkillsButton from "./EditSkillsButton";
 import Work from "./Work";
 import EditLinksButton from "./EditLinksButton";
 
@@ -122,66 +119,70 @@ export default function Room({ username, portofolio }: Props) {
       {/* 作品１ */}
       <Work
         // 画像関連のプロパティ
-        pictureUrl="/portfolio1.png"
+        pictureUrl={portofolio.works[0].pictureUrl}
         framePosition={[-55, wallYPosition * SCALE, -60 * SCALE + 0.8]}
         picturePosition={[-55, wallYPosition * SCALE, -60 * SCALE + 1.5]}
         // 共通設定
         rotation={[0, 0, 0]}
         color="black"
         // テキスト関連のプロパティ
-        title="HabitLink"
-        description="This is a WebGL-based demo showcasing how different texture filtering methods affect the appearance of images and surfaces in a 3D scene. The scene features Caravaggio's 'Basket of Fruit' painting displayed on both left and right panels, with different filter settings applied to each."
+        title={portofolio.works[0].title}
+        description={portofolio.works[0].desc}
         titlePosition={[-30, wallYPosition * SCALE + 10.5, -60 * SCALE + 0.8]}
         descriptionPosition={[
           -30,
           wallYPosition * SCALE + 6.5,
           -60 * SCALE + 0.8,
         ]}
+        workIndex={"0"}
       />
       {/* 作品2 */}
       <Work
         // 画像関連のプロパティ
-        pictureUrl="/portfolio1.png"
+        pictureUrl={portofolio.works[1].pictureUrl}
         framePosition={[-85, wallYPosition * SCALE, -30 + 0.8]}
         picturePosition={[-85, wallYPosition * SCALE, -30 + 1.5]}
         // 共通設定
         rotation={[0, -Math.PI * 0.5, 0]}
         color="white"
         // テキスト関連のプロパティ
-        title="HabitLink"
-        description="This is a WebGL-based demo showcasing how different texture filtering methods affect the appearance of images and surfaces in a 3D scene. The scene features Caravaggio's 'Basket of Fruit' painting displayed on both left and right panels, with different filter settings applied to each."
+        title={portofolio.works[1].title}
+        description={portofolio.works[1].desc}
         titlePosition={[-60, wallYPosition * SCALE + 10.5, -30 + 0.8]}
         descriptionPosition={[-60, wallYPosition * SCALE + 6.5, -30 + 0.8]}
+        workIndex={"1"}
       />
       {/* 作品3 */}
       <Work
         // 画像関連のプロパティ
-        pictureUrl="/portfolio1.png"
+        pictureUrl={portofolio.works[2].pictureUrl}
         framePosition={[-25, wallYPosition * SCALE, -30 + 0.8]}
         picturePosition={[-25, wallYPosition * SCALE, -30 + 1.5]}
         // 共通設定
         rotation={[0, Math.PI * 0.5, 0]}
         color="white"
         // テキスト関連のプロパティ
-        title="HabitLink"
-        description="This is a WebGL-based demo showcasing how different texture filtering methods affect the appearance of images and surfaces in a 3D scene. The scene features Caravaggio's 'Basket of Fruit' painting displayed on both left and right panels, with different filter settings applied to each."
+        title={portofolio.works[2].title}
+        description={portofolio.works[2].desc}
         titlePosition={[0, wallYPosition * SCALE + 10.5, -30 + 0.8]}
         descriptionPosition={[0, wallYPosition * SCALE + 6.5, -30 + 0.8]}
+        workIndex={"2"}
       />
       {/* 作品4 */}
       <Work
         // 画像関連のプロパティ
-        pictureUrl="/portfolio1.png"
+        pictureUrl={portofolio.works[3].pictureUrl}
         framePosition={[-55, wallYPosition * SCALE, -60 + 0.8]}
         picturePosition={[-55, wallYPosition * SCALE, -60 + 1.5]}
         // 共通設定
         rotation={[0, Math.PI, 0]}
         color="black"
         // テキスト関連のプロパティ
-        title="HabitLink"
-        description="This is a WebGL-based demo showcasing how different texture filtering methods affect the appearance of images and surfaces in a 3D scene. The scene features Caravaggio's 'Basket of Fruit' painting displayed on both left and right panels, with different filter settings applied to each."
+        title={portofolio.works[3].title}
+        description={portofolio.works[3].desc}
         titlePosition={[-30, wallYPosition * SCALE + 10.5, -60 + 0.8]}
         descriptionPosition={[-30, wallYPosition * SCALE + 6.5, -60 + 0.8]}
+        workIndex={"3"}
       />
 
       <AreaTitle
