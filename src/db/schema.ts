@@ -6,8 +6,35 @@ const initialSkills = [
        { name: "React", level: "3" },
        { name: "React", level: "3" },
        { name: "React", level: "3" },
-       { name: "React", level: "3"},
+       { name: "React", level: "3" },
 ];
+
+const initialWorks = [
+       {
+              title: "test",
+              desc: "test",
+              siteUrl: "https://example.com",
+              pictureUrl: "https://example.com",
+       },
+       {
+              title: "test",
+              desc: "test",
+              siteUrl: "https://example.com",
+              pictureUrl: "https://example.com",
+       },
+       {
+              title: "test",
+              desc: "test",
+              siteUrl: "https://example.com",
+              pictureUrl: "https://example.com",
+       },
+       {
+              title: "test",
+              desc: "test",
+              siteUrl: "https://example.com",
+              pictureUrl: "https://example.com",
+       },
+]
 
 export const user = pgTable("user", {
        id: text("id").primaryKey(),
@@ -18,6 +45,7 @@ export const user = pgTable("user", {
        username: text('username').unique(),
        intro: text('intro').notNull().default("ppppp"),
        skills: jsonb('skills').notNull().default(initialSkills),
+       works: jsonb("works").notNull().default(initialWorks),
        twitter: text('twitter').unique(),
        github: text('github').unique(),
        zenn: text('zenn').unique(),
