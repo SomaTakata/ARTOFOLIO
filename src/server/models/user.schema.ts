@@ -1,30 +1,33 @@
-import { techs } from '@/components/EditSkillsButton';
-import { user } from '@/db/schema';
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { z } from 'zod';
+import { techs } from "@/components/EditLinksButton";
+import { user } from "@/db/schema";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { z } from "zod";
 
-export const UserSelectSchema = createSelectSchema(user)
+export const UserSelectSchema = createSelectSchema(user);
 export const UserInputSchema = createInsertSchema(user, {
   username: (schema) => schema.min(3).max(10),
-  intro: (schema) => schema.min(1, { message: "一文字も入力されていません。" }).max(40, { message: "40文字以内で入力してください。" }),
-})
+  intro: (schema) =>
+    schema
+      .min(1, { message: "一文字も入力されていません。" })
+      .max(40, { message: "40文字以内で入力してください。" }),
+});
 
 export const UsernameSchema = UserSelectSchema.pick({
-  username: true
-})
+  username: true,
+});
 
 export const UsernameInputSchema = UserInputSchema.pick({
-  username: true
-})
+  username: true,
+});
 
 export const UserCheckQuerySchema = z.object({
-  username: z.string()
-})
+  username: z.string(),
+});
 
 export const SkillSchema = z.object({
   name: z.string(),
   level: z.string(),
-})
+});
 
 export const workSchema = z.object({
   title: z.string(),
@@ -34,7 +37,7 @@ export const workSchema = z.object({
 })
 
 export const SkillsSchema = z.object({
-  skills: z.array(SkillSchema)
+  skills: z.array(SkillSchema),
 });
 
 export const WorksSchema = z.object({
@@ -49,10 +52,10 @@ export const portofolioSchema = UserSelectSchema.pick({
   twitter: true,
   github: true,
   zenn: true,
-  qiita: true
+  qiita: true,
 }).extend({
-  skills: SkillsSchema
-})
+  skills: SkillsSchema,
+});
 
 export const UpdateWorkPayloadSchema = z.object({
   title: z.string(),
@@ -62,11 +65,9 @@ export const UpdateWorkPayloadSchema = z.object({
   index: z.string(),
 });
 
-
-
 export const IntroInputSchema = UserInputSchema.pick({
-  intro: true
-})
+  intro: true,
+});
 
 export type profileSchemaType = z.infer<typeof portofolioSchema>
 export type SkillType = z.infer<typeof SkillSchema>
