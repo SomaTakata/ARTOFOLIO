@@ -1,5 +1,5 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { IntroInputSchema, portofolioSchema,  SkillsSchema,  UserCheckQuerySchema,  UsernameInputSchema, UsernameSchema } from "../models/user.schema";
+import { IntroInputSchema, portofolioSchema, SkillsSchema, UpdateWorkPayloadSchema, UserCheckQuerySchema, UsernameInputSchema, UsernameSchema, WorksSchema } from "../models/user.schema";
 import { ErrorSchema } from "../models/error.schema";
 
 export const getUsernameRoute = createRoute({
@@ -171,7 +171,7 @@ export const updateSkillsRoute = createRoute({
       content: {
         "application/json": {
           schema: z.object({
-            message: z.string()   
+            message: z.string()
           })
         }
       }
@@ -186,3 +186,54 @@ export const updateSkillsRoute = createRoute({
     }
   }
 })
+
+export const updateWorksRoute = createRoute({
+  path: "/works",
+  method: "put",
+  description: "作品の更新（画像アップロード対応）",
+  request: {
+    body: {
+      content: {
+        "multipart/form-data": {
+          schema: UpdateWorkPayloadSchema, // UpdateWorkPayloadSchema は以下のように定義
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "更新成功",
+      content: {
+        "application/json": { schema: 
+          z.object({
+            message: z.string(),
+          }),
+         },
+      },
+    },
+    400: {
+      description: "入力エラー（作品が未入力など）",
+      content: {
+        "application/json": { schema: ErrorSchema },
+      },
+    },
+    401: {
+      description: "Unauthorized",
+      content: {
+        "application/json": { schema: ErrorSchema },
+      },
+    },
+    404: {
+      description: "User not found",
+      content: {
+        "application/json": { schema: ErrorSchema },
+      },
+    },
+    500: {
+      description: "サーバー内部エラー",
+      content: {
+        "application/json": { schema: ErrorSchema },
+      },
+    },
+  },
+});

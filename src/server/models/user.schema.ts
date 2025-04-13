@@ -26,8 +26,19 @@ export const SkillSchema = z.object({
   level: z.string(),
 })
 
+export const workSchema = z.object({
+  title: z.string(),
+  desc: z.string(),
+  siteUrl: z.string(),
+  pictureUrl: z.string(),
+})
+
 export const SkillsSchema = z.object({
   skills: z.array(SkillSchema)
+});
+
+export const WorksSchema = z.object({
+  works: z.array(workSchema)
 });
 
 export const portofolioSchema = UserSelectSchema.pick({
@@ -43,13 +54,23 @@ export const portofolioSchema = UserSelectSchema.pick({
   skills: SkillsSchema
 })
 
+export const UpdateWorkPayloadSchema = z.object({
+  title: z.string(),
+  desc: z.string(),
+  siteUrl: z.string(),
+  // どの作品を更新するかを示す index（number型として扱う。フォーム送信では文字列になるので後で変換する）
+  index: z.string(),
+});
+
+
+
 export const IntroInputSchema = UserInputSchema.pick({
   intro: true
 })
 
-
 export type profileSchemaType = z.infer<typeof portofolioSchema>
 export type SkillType = z.infer<typeof SkillSchema>
+export type WorkType = z.infer<typeof workSchema>
 export type ProfileWithTypedSkills = Omit<profileSchemaType, "skills"> & {
   skills: SkillType[];
 };
