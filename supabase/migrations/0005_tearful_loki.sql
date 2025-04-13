@@ -1,0 +1,1 @@
+ALTER TABLE "user" ALTER COLUMN "skills" SET DEFAULT '[{"name":"React","level":"3"},{"name":"React","level":"3"},{"name":"React","level":"3"},{"name":"React","level":"3"},{"name":"React","level":"3"}]'::jsonb;

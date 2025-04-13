@@ -1,5 +1,5 @@
 import { RouteHandler } from "@hono/zod-openapi";
-import { checkUsernameRoute, getPortofolioRoute, getUsernameRoute, setUsernameRoute, updateIntroRoute } from "../routes/user.route";
+import { checkUsernameRoute, getPortofolioRoute, getUsernameRoute, setUsernameRoute, updateIntroRoute, updateSkillsRoute } from "../routes/user.route";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { db } from "@/db";
@@ -102,6 +102,7 @@ export const getPortofolioHandler: RouteHandler<typeof getPortofolioRoute> = asy
     name,
     username: uname,
     intro,
+    skills,
     twitter,
     github,
     zenn,
@@ -113,6 +114,7 @@ export const getPortofolioHandler: RouteHandler<typeof getPortofolioRoute> = asy
       name,
       username: uname,
       intro,
+      skills,
       twitter,
       github,
       zenn,
@@ -140,6 +142,31 @@ export const updateIntroHandler: RouteHandler<typeof updateIntroRoute> = async (
   await db
     .update(user)
     .set({ intro })
+    .where(eq(user.id, userId));
+
+  return c.json({ message: "成功" }, 200);
+}
+
+export const updateSkillsHandler: RouteHandler<typeof updateSkillsRoute> = async (c) => {
+  const { skills } = c.req.valid("json");
+
+  const session = await auth.api.getSession({
+    headers: await headers()
+  })
+
+  if (!session || !session.user?.id) {
+    throw Error("Unauthorized");
+  }
+
+  const userId = session.user.id;
+
+  if (!skills) {
+    return c.json({ error: "スキルを入力してください" }, 400);
+  }
+
+  await db
+    .update(user)
+    .set({ skills })
     .where(eq(user.id, userId));
 
   return c.json({ message: "成功" }, 200);

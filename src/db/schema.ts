@@ -1,5 +1,13 @@
 import { relations } from 'drizzle-orm';
-import { boolean, integer, json, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, integer, json, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+
+const initialSkills = [
+       { name: "React", level: "3" },
+       { name: "React", level: "3" },
+       { name: "React", level: "3" },
+       { name: "React", level: "3" },
+       { name: "React", level: "3"},
+];
 
 export const user = pgTable("user", {
        id: text("id").primaryKey(),
@@ -9,6 +17,7 @@ export const user = pgTable("user", {
        image: text('image'),
        username: text('username').unique(),
        intro: text('intro').notNull().default("ppppp"),
+       skills: jsonb('skills').notNull().default(initialSkills),
        twitter: text('twitter').unique(),
        github: text('github').unique(),
        zenn: text('zenn').unique(),

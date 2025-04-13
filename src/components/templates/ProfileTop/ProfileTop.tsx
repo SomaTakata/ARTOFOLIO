@@ -6,7 +6,7 @@ import Room from "@/components/Room";
 import { useEffect, useRef } from "react";
 import { Vector3 } from "three";
 import { Physics, useSphere } from "@react-three/cannon";
-import { profileSchemaType } from "@/server/models/user.schema";
+import { profileSchemaType, ProfileWithTypedSkills } from "@/server/models/user.schema";
 
 const useKeyboardInput = () => {
   const keyState = useRef({
@@ -157,7 +157,7 @@ function Player() {
 
 type Props = {
   username: string;
-  portofolio: profileSchemaType;
+  portofolio: ProfileWithTypedSkills;
 };
 
 const ProfileTop = ({ username, portofolio }: Props) => {
@@ -171,7 +171,7 @@ const ProfileTop = ({ username, portofolio }: Props) => {
           far: 1000,
         }}
       >
-        <ambientLight intensity={0.5} />
+        {/* <ambientLight intensity={0.5} /> */}
         <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
           <GizmoViewport />
         </GizmoHelper>
