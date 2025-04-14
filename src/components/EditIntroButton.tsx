@@ -44,8 +44,9 @@ export default function EditIntroButton({ currentIntro }: {
   return (
     <group>
       <group
-        position={[15, wallYPosition * SCALE - 4, 60 * SCALE - 0.3]}
-        rotation={[0, -Math.PI, 0]}>
+        position={[15 + 15, wallYPosition * SCALE + 10, 60 * SCALE - 0.3]}
+        rotation={[0, -Math.PI, 0]}
+      >
         <mesh
           onClick={() => setShowPopup(true)}
           castShadow
@@ -54,20 +55,18 @@ export default function EditIntroButton({ currentIntro }: {
           <meshStandardMaterial color="orange" />
         </mesh>
         <Text
-          position={[0, 0, 0.1]}  // 平面より前面に配置
-          fontSize={0.5}
+          position={[0, 0, 0.1]}
+          fontSize={1.0}
           color="black"
           anchorX="center"
           anchorY="middle"
+          fontWeight={700}
         >
-          編集
+          Update
         </Text>
       </group>
 
-      <Html
-        position={[15 + 20, wallYPosition * SCALE, 60 * SCALE - 0.3]}
-        rotation={[0, -Math.PI, 0]}
-      >
+      <Html>
         <Dialog
           open={showPopup}
           onOpenChange={setShowPopup}
@@ -81,7 +80,6 @@ export default function EditIntroButton({ currentIntro }: {
                   name="intro"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Introduce yourself</FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="I'm a software engineer..."
@@ -89,7 +87,7 @@ export default function EditIntroButton({ currentIntro }: {
                         />
                       </FormControl>
                       <FormDescription>
-                        Please introduce yourself in a few sentences.
+                        Write a simple self-introduction in 40 characters or less.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>

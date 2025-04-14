@@ -2,6 +2,7 @@ import { Text, useTexture } from "@react-three/drei";
 import { useEffect, useState } from "react";
 import { Texture } from "three";
 import EditWorksButton from "./EditWorksButton";
+import { ProfileWithTypedSkills } from "@/server/models/user.schema";
 
 /**
  * ワーク（作品）を表示するためのコンポーネント
@@ -23,6 +24,7 @@ export default function Work({
   titlePosition = [0, 0, 0],
   descriptionPosition = [0, 0, 0],
   workIndex,
+  portofolio,
 }: {
   pictureUrl: string;
   framePosition?: [number, number, number];
@@ -36,6 +38,7 @@ export default function Work({
   titlePosition?: [number, number, number];
   descriptionPosition?: [number, number, number];
   workIndex: string,
+  portofolio: ProfileWithTypedSkills
 }) {
   // 画像のテクスチャをロード
   const picture = useTexture({
@@ -122,13 +125,14 @@ export default function Work({
           <meshBasicMaterial map={picture.map} toneMapped={false} />
         </mesh>
 
-        <EditWorksButton
+        {portofolio.editable && <EditWorksButton
           workIndex={workIndex}
           title={title}
           desc={description}
           siteUrl={"/"}
+          portofolio={portofolio}
           position={[picturePosition[0], picturePosition[1] - 15, picturePosition[2]]}
-        />
+        />}
       </group>
 
       {/* テキスト説明部分 */}

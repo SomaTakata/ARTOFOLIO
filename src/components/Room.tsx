@@ -110,63 +110,52 @@ export default function Room({ username, portofolio }: Props) {
         desc={portofolio.intro}
         titlePositon={[15 + 20, wallYPosition * SCALE + 4, 60 * SCALE - 0.3]}
         titleRotation={[0, -Math.PI, 0]}
-        descPoisiton={[15 + 20, wallYPosition * SCALE - 2, 60 * SCALE - 0.3]}
+        descPoisiton={[15 + 20, wallYPosition * SCALE , 60 * SCALE - 0.3]}
         descRotation={[0, -Math.PI, 0]}
+        portofolio={portofolio}
       />
-
-      <EditIntroButton currentIntro={portofolio.intro} />
 
       {/* 作品１ */}
       <Work
-        // 画像関連のプロパティ
         pictureUrl={portofolio.works[0].pictureUrl}
         framePosition={[-55, wallYPosition * SCALE, -60 * SCALE + 0.8]}
         picturePosition={[-55, wallYPosition * SCALE, -60 * SCALE + 1.5]}
-        // 共通設定
         rotation={[0, 0, 0]}
         color="black"
-        // テキスト関連のプロパティ
         title={portofolio.works[0].title}
         description={portofolio.works[0].desc}
         titlePosition={[-30, wallYPosition * SCALE + 10.5, -60 * SCALE + 0.8]}
-        descriptionPosition={[
-          -30,
-          wallYPosition * SCALE + 6.5,
-          -60 * SCALE + 0.8,
-        ]}
+        descriptionPosition={[-30,wallYPosition * SCALE + 6.5,-60 * SCALE + 0.8,]}
         workIndex={"0"}
+        portofolio={portofolio}
       />
       {/* 作品2 */}
       <Work
-        // 画像関連のプロパティ
         pictureUrl={portofolio.works[1].pictureUrl}
         framePosition={[-85, wallYPosition * SCALE, -30 + 0.8]}
         picturePosition={[-85, wallYPosition * SCALE, -30 + 1.5]}
-        // 共通設定
         rotation={[0, -Math.PI * 0.5, 0]}
         color="white"
-        // テキスト関連のプロパティ
         title={portofolio.works[1].title}
         description={portofolio.works[1].desc}
         titlePosition={[-60, wallYPosition * SCALE + 10.5, -30 + 0.8]}
         descriptionPosition={[-60, wallYPosition * SCALE + 6.5, -30 + 0.8]}
         workIndex={"1"}
+        portofolio={portofolio}
       />
       {/* 作品3 */}
       <Work
-        // 画像関連のプロパティ
         pictureUrl={portofolio.works[2].pictureUrl}
         framePosition={[-25, wallYPosition * SCALE, -30 + 0.8]}
         picturePosition={[-25, wallYPosition * SCALE, -30 + 1.5]}
-        // 共通設定
         rotation={[0, Math.PI * 0.5, 0]}
         color="white"
-        // テキスト関連のプロパティ
         title={portofolio.works[2].title}
         description={portofolio.works[2].desc}
         titlePosition={[0, wallYPosition * SCALE + 10.5, -30 + 0.8]}
         descriptionPosition={[0, wallYPosition * SCALE + 6.5, -30 + 0.8]}
         workIndex={"2"}
+        portofolio={portofolio}
       />
       {/* 作品4 */}
       <Work
@@ -183,6 +172,7 @@ export default function Room({ username, portofolio }: Props) {
         titlePosition={[-30, wallYPosition * SCALE + 10.5, -60 + 0.8]}
         descriptionPosition={[-30, wallYPosition * SCALE + 6.5, -60 + 0.8]}
         workIndex={"3"}
+        portofolio={portofolio}
       />
 
       <AreaTitle
@@ -196,7 +186,7 @@ export default function Room({ username, portofolio }: Props) {
         titleRotation={[0, -Math.PI, 0]}
         descPoisiton={[
           -67.5 + 7.5 + 20,
-          wallYPosition * SCALE - 2,
+          wallYPosition * SCALE,
           60 * SCALE - 0.3,
         ]}
         descRotation={[0, -Math.PI, 0]}
@@ -213,7 +203,7 @@ export default function Room({ username, portofolio }: Props) {
         titleRotation={[0, Math.PI * 0.5, 0]}
         descPoisiton={[
           -45 * SCALE + 0.5,
-          wallYPosition * SCALE - 2,
+          wallYPosition * SCALE,
           -45 * SCALE + 20,
         ]}
         descRotation={[0, Math.PI * 0.5, 0]}
@@ -230,7 +220,7 @@ export default function Room({ username, portofolio }: Props) {
         titleRotation={[0, -Math.PI * 0.5, 0]}
         descPoisiton={[
           45 * SCALE - 0.5,
-          wallYPosition * SCALE - 2,
+          wallYPosition * SCALE,
           15 * SCALE - 20,
         ]}
         descRotation={[0, -Math.PI * 0.5, 0]}
@@ -335,6 +325,9 @@ export default function Room({ username, portofolio }: Props) {
         pictureRotation={[0, -Math.PI * 0.5, 0]}
         color="black"
         textColor="white"
+        fieldName="qiita"
+        currentSNS={portofolio.sns}
+        pictureUrl="/qiita.png"
       />
 
       <EditLinksButton
@@ -355,6 +348,9 @@ export default function Room({ username, portofolio }: Props) {
         pictureRotation={[0, -Math.PI * 0.5, 0]}
         color="black"
         textColor="white"
+        fieldName="zenn"
+        currentSNS={portofolio.sns}
+        pictureUrl="/zenn.png"
       />
       {/* リンク 壁左側*/}
       <EditLinksButton
@@ -367,6 +363,9 @@ export default function Room({ username, portofolio }: Props) {
         pictureRotation={[0, Math.PI * 0.5, 0]}
         color="black"
         textColor="white"
+        fieldName="otherwise"
+        currentSNS={portofolio.sns}
+        pictureUrl="/otherwise.png"
       />
 
       <EditLinksButton
@@ -387,6 +386,9 @@ export default function Room({ username, portofolio }: Props) {
         pictureRotation={[0, Math.PI * 0.5, 0]}
         color="black"
         textColor="white"
+        fieldName="twitter"
+        currentSNS={portofolio.sns}
+        pictureUrl="/x.png"
       />
 
       {/* リンク 壁正面*/}
@@ -400,6 +402,9 @@ export default function Room({ username, portofolio }: Props) {
         pictureRotation={[0, 0, 0]}
         color="white"
         textColor="black"
+        fieldName="github"
+        currentSNS={portofolio.sns}
+        pictureUrl="/github.png"
       />
 
       <Arch

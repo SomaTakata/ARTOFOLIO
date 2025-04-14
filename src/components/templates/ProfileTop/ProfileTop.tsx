@@ -14,7 +14,7 @@ import {
 } from "react";
 import { Vector3 } from "three";
 import { Physics, useSphere } from "@react-three/cannon";
-import { profileSchemaType } from "@/server/models/user.schema";
+import { ProfileWithTypedSkills } from "@/server/models/user.schema";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {

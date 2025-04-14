@@ -1,6 +1,6 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { checkUsernameHandler, getPortofolioHandler, getUsernameHandler, setUsernameHandler, updateIntroHandler, updateSkillsHandler, updateWorksHandler } from "./controllers/user.controller";
-import { checkUsernameRoute, getPortofolioRoute, getUsernameRoute, setUsernameRoute, updateIntroRoute, updateSkillsRoute, updateWorksRoute } from "./routes/user.route";
+import { checkUsernameHandler, getPortofolioHandler, getUsernameHandler, setUsernameHandler, updateIntroHandler, updateLinksHandler, updateSkillsHandler, updateWorksHandler } from "./controllers/user.controller";
+import { checkUsernameRoute, getPortofolioRoute, getUsernameRoute, setUsernameRoute, updateIntroRoute, updateLinksRoute, updateSkillsRoute, updateWorksRoute } from "./routes/user.route";
 import { swaggerUI } from "@hono/swagger-ui";
 
 export const app = new OpenAPIHono().basePath("/api");
@@ -16,6 +16,7 @@ const profileApp = new OpenAPIHono()
   .openapi(updateIntroRoute, updateIntroHandler)
   .openapi(updateSkillsRoute, updateSkillsHandler)
   .openapi(updateWorksRoute, updateWorksHandler)
+  .openapi(updateLinksRoute, updateLinksHandler)
   .openapi(getPortofolioRoute, getPortofolioHandler)
 
 const mainApp = new OpenAPIHono()

@@ -5,12 +5,12 @@ import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Button } from "./ui/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,10 +19,12 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import {
   ProfileWithTypedSkills,
-  SkillSchema,
   SkillType,
+  SnsSchemaType,
 } from "@/server/models/user.schema";
 import Painting from "./Painting";
+import { Input } from "./ui/input";
+import { ClickableLink } from "./ClickableLink";
 
 export const techs = [
   "React",
@@ -32,7 +34,8 @@ export const techs = [
   "Supabase",
 ] as const;
 
-type FormData = z.infer<typeof SkillSchema>;
+type SNSField = "qiita" | "zenn" | "github" | "twitter" | "otherwise";
+
 type Props = {
   skills: SkillType[];
   editNum: number;
@@ -43,12 +46,12 @@ type Props = {
   frameRotation?: [number, number, number];
   picturePosition?: [number, number, number];
   pictureRotation?: [number, number, number];
+  currentSNS: SnsSchemaType,
+  fieldName: SNSField,
+  pictureUrl: string
 };
 
 export default function EditLinksButton({
-  skills,
-  editNum,
-  portofolio,
   color = "black",
   textColor = "white",
   framePosition = [
@@ -63,65 +66,89 @@ export default function EditLinksButton({
     120 - 26 - 24 - 23 - 24 - 23 - 12,
   ],
   pictureRotation = [0, Math.PI * 0.5, 0],
+  currentSNS,
+  fieldName,
+  pictureUrl,
+  portofolio
 }: Props) {
-  const { name, level } = skills[editNum];
 
+  const SingleLinkSchema = z.object({
+    link: z.string().url().or(z.literal("")).refine((val) => {
+      if (!val) return true; // 空ならOK（nullable扱い）
+
+      switch (fieldName) {
+        case "github":
+          return val.startsWith("https://github.com/");
+        case "twitter":
+          return val.startsWith("https://twitter.com/");
+        case "zenn":
+          return val.startsWith("https://zenn.dev/");
+        case "qiita":
+          return val.startsWith("https://qiita.com/");
+        default:
+          return true;
+      }
+    }, {
+      message: `${fieldName} link format is incorrect.`,
+    }),
+  });
+
+  type SingleLinkFormData = z.infer<typeof SingleLinkSchema>;
   const [showPopup, setShowPopup] = useState(false);
-  const form = useForm<FormData>({
-    resolver: zodResolver(SkillSchema),
+  const form = useForm<SingleLinkFormData>({
+    resolver: zodResolver(SingleLinkSchema),
     defaultValues: {
-      name: name,
-      level: level,
+      link: portofolio.sns[fieldName]
     },
   });
 
   const router = useRouter();
 
-  const onSubmit = async (data: FormData) => {
-    const { name, level } = data;
+  const onSubmit = async (data: SingleLinkFormData) => {
+    const updatedSNS: SnsSchemaType = { ...currentSNS, [fieldName]: data.link };
 
-    const updatedSkills = [...skills];
-
-    updatedSkills[editNum] = {
-      ...updatedSkills[editNum],
-      name: name,
-      level: level,
-    };
-
-    console.log(updatedSkills);
-
-    await fetch(`/api/profile/skills`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        skills: updatedSkills,
-      }),
-    });
-
-    router.refresh();
+    console.log(updatedSNS)
+    console.log(currentSNS)
+    try {
+      const res = await fetch("/api/profile/links", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sns: updatedSNS
+        }),
+      });
+      if (!res.ok) {
+        console.error(`Failed to update ${fieldName}`);
+        return;
+      }
+      router.refresh();
+    } catch (error) {
+      console.error(`Error updating ${fieldName}:`, error);
+    }
   };
+
 
   return (
     <group>
-      <mesh
+        {(portofolio.editable || portofolio.sns[fieldName] !== "") && ( <mesh
         castShadow
         onClick={() => {
           setShowPopup(true);
         }}
       >
         <Painting
-          pictureUrl={`${portofolio.skills[editNum].name}.png`}
+          pictureUrl={pictureUrl}
           framePostion={framePosition}
           frameRotation={frameRotation}
           picturePosition={picturePosition}
           pictureRotation={pictureRotation}
           frameColor={color}
         />
-      </mesh>
+      </mesh>)}
 
-      <group
+      {(portofolio.editable || portofolio.sns[fieldName] !== "") && (<group
         position={[framePosition[0], framePosition[1] - 15, framePosition[2]]}
         rotation={frameRotation}
       >
@@ -129,23 +156,28 @@ export default function EditLinksButton({
           <planeGeometry args={[15, 3]} />
           <meshStandardMaterial color={color} />
         </mesh>
-        <Text
-          position={[0, 0, 0.1]}
-          fontSize={1.2}
-          color={textColor}
-          anchorX="center"
-          anchorY="middle"
-          fontWeight={700}
+        <ClickableLink
+          position={[0, 0, 0]}
+          url={portofolio.sns[fieldName]}
         >
-          Lv.{portofolio.skills[editNum].level}{" "}
-          {portofolio.skills[editNum].name}
-        </Text>
-      </group>
+          <Text
+            position={[0, 0, 0.1]}
+            fontSize={1.2}
+            color={textColor}
+            anchorX="center"
+            anchorY="middle"
+            fontWeight={700}
+          >
+            {portofolio.sns[fieldName] && "🔗"}{fieldName}
+
+          </Text>
+        </ClickableLink>
+      </group>)}
 
       <Html>
         <Dialog open={showPopup} onOpenChange={setShowPopup}>
           <DialogContent onInteractOutside={(e) => e.preventDefault()}>
-            <DialogTitle>Choose your favorite tech</DialogTitle>
+            <DialogTitle>Link</DialogTitle>
 
             <Form {...form}>
               <form
@@ -154,72 +186,26 @@ export default function EditLinksButton({
               >
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="link"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tech Stack</FormLabel>
+                      <FormLabel>{fieldName} url</FormLabel>
                       <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="flex"
-                        >
-                          {techs.map((tech) => (
-                            <FormItem
-                              key={tech}
-                              className="flex items-center space-x-3"
-                            >
-                              <FormControl>
-                                <RadioGroupItem value={tech} />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                {tech}
-                              </FormLabel>
-                            </FormItem>
-                          ))}
-                        </RadioGroup>
+                        <Input {...field} placeholder={`https://${fieldName}.com`} className="input-class" />
                       </FormControl>
+                      <FormDescription>
+                        If left blank, the link will not be set.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="level"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Skill Level</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="flex space-x-4"
-                        >
-                          {["1", "2", "3", "4", "5"].map((lvl) => (
-                            <FormItem
-                              key={lvl}
-                              className="flex items-center space-x-2"
-                            >
-                              <FormControl>
-                                <RadioGroupItem value={lvl} />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                {lvl}
-                              </FormLabel>
-                            </FormItem>
-                          ))}
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit">Submit</Button>
+                <Button type="submit" className="w-full">Update</Button>
               </form>
             </Form>
           </DialogContent>
         </Dialog>
       </Html>
-    </group>
+    </group >
   );
 }

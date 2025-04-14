@@ -105,11 +105,13 @@ export default function EditSkillsButton({
 
   return (
     <group>
-      <mesh
+      {portofolio.editable && <mesh
         castShadow
         onClick={() => {
           setShowPopup(true);
         }}
+        onPointerOver={() => (document.body.style.cursor = "pointer")}
+        onPointerOut={() => (document.body.style.cursor = "default")}
       >
         <Painting
           pictureUrl={`${portofolio.skills[editNum].name}.png`}
@@ -119,7 +121,18 @@ export default function EditSkillsButton({
           pictureRotation={pictureRotation}
           frameColor={color}
         />
-      </mesh>
+      </mesh>}
+
+      {!portofolio.editable && (
+        <Painting
+          pictureUrl={`${portofolio.skills[editNum].name}.png`}
+          framePostion={framePosition}
+          frameRotation={frameRotation}
+          picturePosition={picturePosition}
+          pictureRotation={pictureRotation}
+          frameColor={color}
+        />
+      )}
 
       <group
         position={[framePosition[0], framePosition[1] - 15, framePosition[2]]}
@@ -145,7 +158,7 @@ export default function EditSkillsButton({
       <Html>
         <Dialog open={showPopup} onOpenChange={setShowPopup}>
           <DialogContent onInteractOutside={(e) => e.preventDefault()}>
-            <DialogTitle>Choose your favorite tech</DialogTitle>
+            <DialogTitle>Please select your strongest skill.</DialogTitle>
 
             <Form {...form}>
               <form
@@ -214,7 +227,7 @@ export default function EditSkillsButton({
                     </FormItem>
                   )}
                 />
-                <Button type="submit">Submit</Button>
+                <Button type="submit" className="w-full">Update</Button>
               </form>
             </Form>
           </DialogContent>
