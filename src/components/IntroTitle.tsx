@@ -1,4 +1,6 @@
 import { Text } from "@react-three/drei";
+import EditIntroButton from "./EditIntroButton";
+import { ProfileWithTypedSkills } from "@/server/models/user.schema";
 
 export default function IntroTitle({
   titlePositon = [0, 0, 0],
@@ -8,6 +10,7 @@ export default function IntroTitle({
   title = "Area Title",
   desc = "Description of the area.",
   color = "black",
+  portofolio,
 }: {
   titlePositon?: [number, number, number];
   titleRotation?: [number, number, number];
@@ -16,9 +19,13 @@ export default function IntroTitle({
   title?: string;
   desc?: string;
   color?: string;
+  portofolio: ProfileWithTypedSkills
 }) {
   return (
     <group>
+      {portofolio.editable &&
+        <EditIntroButton currentIntro={portofolio.intro} />
+      }
       <Text
         position={titlePositon}
         rotation={titleRotation}

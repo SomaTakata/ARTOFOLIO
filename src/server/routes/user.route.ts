@@ -1,5 +1,5 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { IntroInputSchema, portofolioSchema, SkillsSchema, UpdateWorkPayloadSchema, UserCheckQuerySchema, UsernameInputSchema, UsernameSchema, WorksSchema } from "../models/user.schema";
+import { IntroInputSchema, portofolioSchema, SkillsSchema, SnsSchema, UpdateWorkPayloadSchema, UserCheckQuerySchema, UsernameInputSchema, UsernameSchema, WorksSchema } from "../models/user.schema";
 import { ErrorSchema } from "../models/error.schema";
 
 export const getUsernameRoute = createRoute({
@@ -204,11 +204,12 @@ export const updateWorksRoute = createRoute({
     200: {
       description: "更新成功",
       content: {
-        "application/json": { schema: 
-          z.object({
-            message: z.string(),
-          }),
-         },
+        "application/json": {
+          schema:
+            z.object({
+              message: z.string(),
+            }),
+        },
       },
     },
     400: {
@@ -237,3 +238,41 @@ export const updateWorksRoute = createRoute({
     },
   },
 });
+
+
+export const updateLinksRoute = createRoute({
+  path: "/links",
+  method: "put",
+  description: "リンクの更新",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            sns: SnsSchema
+          })
+        }
+      }
+    }
+  },
+  responses: {
+    200: {
+      description: "更新成功",
+      content: {
+        "application/json": {
+          schema: z.object({
+            message: z.string()
+          })
+        }
+      }
+    },
+    400: {
+      description: "snsが未入力",
+      content: {
+        "application/json": {
+          schema: ErrorSchema
+        }
+      }
+    }
+  }
+})

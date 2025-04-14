@@ -14,27 +14,35 @@ const initialWorks = [
               title: "test",
               desc: "test",
               siteUrl: "https://example.com",
-              pictureUrl: "https://example.com",
+              pictureUrl: "/portfolio1.png",
        },
        {
               title: "test",
               desc: "test",
               siteUrl: "https://example.com",
-              pictureUrl: "https://example.com",
+              pictureUrl: "/portfolio1.png",
        },
        {
               title: "test",
               desc: "test",
               siteUrl: "https://example.com",
-              pictureUrl: "https://example.com",
+              pictureUrl: "/portfolio1.png",
        },
        {
               title: "test",
               desc: "test",
               siteUrl: "https://example.com",
-              pictureUrl: "https://example.com",
+              pictureUrl: "/portfolio1.png",
        },
 ]
+
+const initialSNS = {
+       zenn: "",
+       qiita: "",
+       twitter: "",
+       github: "",
+       otherwise: ""
+};
 
 export const user = pgTable("user", {
        id: text("id").primaryKey(),
@@ -46,10 +54,7 @@ export const user = pgTable("user", {
        intro: text('intro').notNull().default("ppppp"),
        skills: jsonb('skills').notNull().default(initialSkills),
        works: jsonb("works").notNull().default(initialWorks),
-       twitter: text('twitter').unique(),
-       github: text('github').unique(),
-       zenn: text('zenn').unique(),
-       qiita: text('qiita').unique(),
+       sns: jsonb("sns").notNull().default(initialSNS),
        createdAt: timestamp('created_at').notNull(),
        updatedAt: timestamp('updated_at').notNull()
 });

@@ -26,8 +26,6 @@ export default function Painting({
       <mesh
         position={framePostion}
         rotation={frameRotation}
-        onPointerOver={() => (document.body.style.cursor = "pointer")}
-        onPointerOut={() => (document.body.style.cursor = "default")}
       >
         <boxGeometry args={[24, 24]} />
         <meshStandardMaterial color={frameColor} />

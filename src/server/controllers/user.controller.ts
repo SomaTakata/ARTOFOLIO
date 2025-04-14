@@ -1,12 +1,11 @@
 import { RouteHandler } from "@hono/zod-openapi";
-import { checkUsernameRoute, getPortofolioRoute, getUsernameRoute, setUsernameRoute, updateIntroRoute, updateSkillsRoute, updateWorksRoute } from "../routes/user.route";
+import { checkUsernameRoute, getPortofolioRoute, getUsernameRoute, setUsernameRoute, updateIntroRoute, updateLinksRoute, updateSkillsRoute, updateWorksRoute } from "../routes/user.route";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { user } from "@/db/schema";
 import { and, eq, ne } from "drizzle-orm";
 import { supabase } from "@/lib/supabase";
-import { UpdateWorkPayloadSchema, WorkType } from "../models/user.schema";
 
 export const getUsernameHandler: RouteHandler<typeof getUsernameRoute> = async (c) => {
   const session = await auth.api.getSession({
@@ -100,17 +99,26 @@ export const getPortofolioHandler: RouteHandler<typeof getPortofolioRoute> = asy
     return c.json({ error: "Not Found" }, 404);
   }
 
+  const session = await auth.api.getSession({
+    headers: await headers()
+  })
+
+  const userId = session?.user.id
+
   const {
+    id,
     name,
     username: uname,
     intro,
     skills,
-    twitter,
-    github,
-    zenn,
-    qiita,
+    sns,
     works
   } = result[0];
+
+  const editable = userId === id
+  console.log(`userId: ${userId}`)
+  console.log(`id: ${id}`)
+  console.log(editable)
 
   return c.json(
     {
@@ -118,11 +126,9 @@ export const getPortofolioHandler: RouteHandler<typeof getPortofolioRoute> = asy
       username: uname,
       intro,
       skills,
-      twitter,
-      github,
-      zenn,
-      qiita,
-      works
+      sns,
+      works,
+      editable
     }, 200);
 };
 
@@ -257,4 +263,27 @@ export const updateWorksHandler: RouteHandler<typeof updateWorksRoute> = async (
     console.error("Error updating works:", err);
     return c.json({ error: "サーバー内部エラー" }, 500);
   }
+};
+
+export const updateLinksHandler: RouteHandler<typeof updateLinksRoute> = async (c) => {
+  // SnsSchema に沿った JSON データから、各SNSのリンクを取り出します
+  const { sns } = c.req.valid("json");
+
+  // セッション情報からログインユーザーを取得
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
+  if (!session || !session.user?.id) {
+    throw Error("Unauthorized");
+  }
+
+  const userId = session.user.id;
+
+  await db
+    .update(user)
+    .set({ sns })
+    .where(eq(user.id, userId));
+
+  return c.json({ message: "成功" }, 200);
 };

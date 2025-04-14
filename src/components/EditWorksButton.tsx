@@ -10,6 +10,7 @@ import axios from "axios";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,9 +19,11 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  ProfileWithTypedSkills,
   UpdateWorkPayloadSchema,
   UpdateWorkPayloadSchemaType
 } from "@/server/models/user.schema";
+import { ClickableLink } from "./ClickableLink";
 
 type Props = {
   title: string;
@@ -29,11 +32,12 @@ type Props = {
   workIndex: string;
   position?: [number, number, number],
   rotation?: [number, number, number],
+  portofolio: ProfileWithTypedSkills
 };
 
 export default function EditWorksButton({
   title, desc, siteUrl, workIndex,
-  position, rotation
+  position, rotation, portofolio
 }: Props) {
   const [showPopup, setShowPopup] = useState(false);
   const router = useRouter();
@@ -105,7 +109,7 @@ export default function EditWorksButton({
       >
         <Dialog open={showPopup} onOpenChange={setShowPopup}>
           <DialogContent onInteractOutside={(e) => e.preventDefault()}>
-            <DialogTitle>作品更新</DialogTitle>
+            <DialogTitle>Please register your work.</DialogTitle>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
@@ -115,8 +119,11 @@ export default function EditWorksButton({
                     <FormItem>
                       <FormLabel>Title</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="作品タイトルを入力" {...field} />
+                        <Textarea placeholder="title" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Please write the title within 20 characters.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -128,8 +135,11 @@ export default function EditWorksButton({
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="説明を入力" {...field} />
+                        <Textarea placeholder="description" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Please write the description within 100 characters.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -143,13 +153,16 @@ export default function EditWorksButton({
                       <FormControl>
                         <Textarea placeholder="https://example.com" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        It's okay if your work doesn't have a URL.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 {/* ファイル入力 */}
                 <FormItem>
-                  <FormLabel>Image</FormLabel>
+                  <FormLabel>Pitcture</FormLabel>
                   <FormControl>
                     <input
                       type="file"

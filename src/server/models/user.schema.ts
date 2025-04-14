@@ -8,8 +8,8 @@ export const UserInputSchema = createInsertSchema(user, {
   username: (schema) => schema.min(3).max(10),
   intro: (schema) =>
     schema
-      .min(1, { message: "一文字も入力されていません。" })
-      .max(40, { message: "40文字以内で入力してください。" }),
+      .min(1, { message: "Nothing has been entered." })
+      .max(40, { message: "Please enter within 40 characters." }),
 });
 
 export const UsernameSchema = UserSelectSchema.pick({
@@ -32,7 +32,7 @@ export const SkillSchema = z.object({
 export const WorkSchema = z.object({
   title: z.string(),
   desc: z.string(),
-  siteUrl: z.string(),
+  siteUrl: z.string().url().or(z.literal("")),
   pictureUrl: z.string(),
 })
 
@@ -49,19 +49,30 @@ export const portofolioSchema = UserSelectSchema.pick({
   username: true,
   intro: true,
   skills: true,
-  twitter: true,
-  github: true,
-  zenn: true,
-  qiita: true,
   works: true,
+  sns: true
 }).extend({
   skills: SkillsSchema,
+  works: WorksSchema,
+  editable: z.boolean()
 });
 
+export const SnsSchema = z.object({
+  qiita: z.string().url().or(z.literal("")),
+  zenn: z.string().url().or(z.literal("")),
+  github: z.string().url().or(z.literal("")),
+  twitter: z.string().url().or(z.literal("")),
+  otherwise: z.string().url().or(z.literal(""))
+})
+
 export const UpdateWorkPayloadSchema = z.object({
-  title: z.string().min(1, { message: "何も入力されていません。" }).max(20, { message: "最大20文字までです。" }),
-  desc: z.string().min(1, { message: "何も入力されていません。" }).max(100, { message: "最大100文字までです。" }),
-  siteUrl: z.string(),
+  title: z.string()
+    .min(1, { message: "Nothing has been entered." })
+    .max(20, { message: "Please enter within 20 characters." }),
+  desc: z.string()
+    .min(1, { message: "Nothing has been entered." })
+    .max(100, { message: "Please enter within 100 characters." }),
+  siteUrl: z.string().url().or(z.literal("")),
   index: z.string(),
   image: z.any().optional()
 });
@@ -76,6 +87,8 @@ export type WorkType = z.infer<typeof WorkSchema>
 export type ProfileWithTypedSkills = Omit<profileSchemaType, "skills"> & {
   skills: SkillType[];
   works: WorkType[];
+  sns: SnsSchemaType;
+  editable: boolean
 };
-
 export type UpdateWorkPayloadSchemaType = z.infer<typeof UpdateWorkPayloadSchema>;
+export type SnsSchemaType = z.infer<typeof SnsSchema>
