@@ -34,10 +34,12 @@ export default function Room({ username, portofolio }: Props) {
         height={wallHeight * SCALE}
         depth={0.1 * SCALE}
       />
+
       {/* 左壁 LINK */}
       <Wall
         position={[60, wallYPosition * SCALE, -60 * SCALE]}
-        color="black"
+        color="#1a1a1a"
+        isBlack={true}
         width={30 * SCALE}
         height={wallHeight * SCALE}
         depth={0.1 * SCALE}
@@ -83,23 +85,27 @@ export default function Room({ username, portofolio }: Props) {
         depth={0.1 * SCALE}
       />
 
-      {/* キルの壁 */}
+      {/* スキルの壁 */}
       <Wall
         position={[-15 * SCALE, wallYPosition * SCALE, 0]}
         rotation={[0, -Math.PI * 0.5, 0]}
-        color="black"
-        backColor="black"
+        color="#1a1a1a" // 純粋な黒(#000000)ではなく、暗いグレー
+        backColor="#1a1a1a"
+        isBlack={true}
+        isBackBlack={true}
         width={60 * SCALE}
         height={wallHeight * SCALE}
         depth={0.1 * SCALE}
       />
 
-      {/* 作品 */}
+      {/* 作品の壁 */}
       <Wall
         position={[15 * SCALE, wallYPosition * SCALE, -30 * SCALE]}
         rotation={[0, -Math.PI * 0.5, 0]}
-        color="black"
+        color="#1a1a1a" // 純粋な黒よりも少し明るく
         backColor="white"
+        isBlack={true}
+        isBackBlack={false}
         width={60 * SCALE}
         height={wallHeight * SCALE}
         depth={0.1 * SCALE}
@@ -110,7 +116,7 @@ export default function Room({ username, portofolio }: Props) {
         desc={portofolio.intro}
         titlePositon={[15 + 20, wallYPosition * SCALE + 4, 60 * SCALE - 0.3]}
         titleRotation={[0, -Math.PI, 0]}
-        descPoisiton={[15 + 20, wallYPosition * SCALE , 60 * SCALE - 0.3]}
+        descPoisiton={[15 + 20, wallYPosition * SCALE, 60 * SCALE - 0.3]}
         descRotation={[0, -Math.PI, 0]}
         portofolio={portofolio}
       />
@@ -125,7 +131,11 @@ export default function Room({ username, portofolio }: Props) {
         title={portofolio.works[0].title}
         description={portofolio.works[0].desc}
         titlePosition={[-30, wallYPosition * SCALE + 10.5, -60 * SCALE + 0.8]}
-        descriptionPosition={[-30,wallYPosition * SCALE + 6.5,-60 * SCALE + 0.8,]}
+        descriptionPosition={[
+          -30,
+          wallYPosition * SCALE + 6.5,
+          -60 * SCALE + 0.8,
+        ]}
         workIndex={"0"}
         portofolio={portofolio}
       />
@@ -484,7 +494,7 @@ export default function Room({ username, portofolio }: Props) {
           45 * SCALE,
         ]}
       />
-      <ambientLight intensity={6} />
+      <ambientLight intensity={3} />
       {/* 天井 */}
       <Ceiling />
     </>

@@ -37,8 +37,8 @@ export default function Work({
   description?: string;
   titlePosition?: [number, number, number];
   descriptionPosition?: [number, number, number];
-  workIndex: string,
-  portofolio: ProfileWithTypedSkills
+  workIndex: string;
+  portofolio: ProfileWithTypedSkills;
 }) {
   // 画像のテクスチャをロード
   const picture = useTexture({
@@ -112,27 +112,33 @@ export default function Work({
       {/* 画像プレビュー部分 */}
       <group>
         {/* フレーム - 常に固定の横長サイズ */}
-        <mesh position={framePosition}>
+        <mesh castShadow position={framePosition}>
           <boxGeometry args={[FRAME_WIDTH, FRAME_HEIGHT]} />
           <meshStandardMaterial color={color} />
         </mesh>
 
         {/* 写真 - テクスチャをスケーリングして表示 */}
-        <mesh position={picturePosition}>
+        <mesh castShadow position={picturePosition}>
           <planeGeometry
             args={[FRAME_WIDTH - FRAME_PADDING, FRAME_HEIGHT - FRAME_PADDING]}
           />
           <meshBasicMaterial map={picture.map} toneMapped={false} />
         </mesh>
 
-        {portofolio.editable && <EditWorksButton
-          workIndex={workIndex}
-          title={title}
-          desc={description}
-          siteUrl={"/"}
-          portofolio={portofolio}
-          position={[picturePosition[0], picturePosition[1] - 15, picturePosition[2]]}
-        />}
+        {portofolio.editable && (
+          <EditWorksButton
+            workIndex={workIndex}
+            title={title}
+            desc={description}
+            siteUrl={"/"}
+            portofolio={portofolio}
+            position={[
+              picturePosition[0],
+              picturePosition[1] - 15,
+              picturePosition[2],
+            ]}
+          />
+        )}
       </group>
 
       {/* テキスト説明部分 */}
