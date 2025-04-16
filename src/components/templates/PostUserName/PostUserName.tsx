@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -38,7 +37,12 @@ const formSchema = z
 
 type FormData = z.infer<typeof formSchema>
 
-export default function PostUserName() {
+type Props = {
+  changeStep: () => void;
+  getUsername: (name: string) => void;
+}
+
+export default function PostUserName({ changeStep, getUsername }: Props) {
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -46,8 +50,6 @@ export default function PostUserName() {
       username: "",
     },
   })
-
-  const router = useRouter();
 
   const onSubmit = async (data: FormData) => {
 
@@ -59,7 +61,8 @@ export default function PostUserName() {
       body: JSON.stringify({ username }),
     });
 
-    router.push(`/${username}`)
+    getUsername(username)
+    changeStep();
   };
 
   return (
@@ -72,18 +75,20 @@ export default function PostUserName() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>your name</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="y_ta" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is your public display name.
+                    This will be the name of your museum.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">Submit</Button>
+            <Button type="submit" className="w-full cursor-pointer">
+              Create your museum
+            </Button>
           </form>
         </Form>
       </div>

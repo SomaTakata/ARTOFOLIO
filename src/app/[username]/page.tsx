@@ -24,7 +24,7 @@ export default async function Page({ params }: Props) {
     return <div>エラーが発生しました</div>;
   }
 
-  const portofolio: ProfileWithTypedSkills = await res.json();
+  const portofolio: ProfileWithTypedSkills = await res.json()
 
   return (
     <>
