@@ -1,6 +1,9 @@
+// Wall.tsx の修正版
+
 import { useBox } from "@react-three/cannon";
 import { useTexture } from "@react-three/drei";
 import { useEffect } from "react";
+import * as THREE from "three";
 import { RepeatWrapping } from "three";
 
 type WallProps = {
@@ -10,6 +13,7 @@ type WallProps = {
   height?: number;
   depth?: number;
   receiveShadow?: boolean;
+  castShadow?: boolean;
   textureRepeat?: [number, number];
   color?: string;
   backColor?: string;
@@ -24,31 +28,32 @@ export default function Wall({
   height = 1,
   depth = 0.1,
   receiveShadow = true,
+  castShadow = false, // デフォルトで影を落とさないように変更
   textureRepeat = [1, 1],
   color = "#ffffff",
   backColor = "#ffffff",
   isBlack = false,
   isBackBlack = false,
 }: WallProps) {
-  // プラスターテクスチャをロード
+  // displacementMap のロードを削除
   const textures = useTexture({
-    map: "/textures/Plaster003_4K-JPG_Color.jpg",
-    normalMap: "/textures/Plaster003_4K-JPG_NormalGL.jpg",
-    roughnessMap: "/textures/Plaster003_4K-JPG_Roughness.jpg",
-    displacementMap: "/textures/Plaster003_4K-JPG_Displacement.jpg",
+    map: "/textures/Plaster001_2K-JPG_Color.jpg",
+    normalMap: "/textures/Plaster001_2K-JPG_NormalGL.jpg",
+    roughnessMap: "/textures/Plaster001_2K-JPG_Roughness.jpg",
+    // displacementMap: "/textures/Plaster001_2K-JPG_Displacement.jpg", // 削除
   });
 
-  // テクスチャの繰り返し設定
   useEffect(() => {
     Object.values(textures).forEach((texture) => {
       if (texture) {
         texture.wrapS = texture.wrapT = RepeatWrapping;
         texture.repeat.set(textureRepeat[0], textureRepeat[1]);
+        // オプション: テクスチャ異方性フィルタリング (品質向上)
+        // texture.anisotropy = 16;
       }
     });
   }, [textures, textureRepeat]);
 
-  // useBox で静的な物理ボディを生成
   const [ref] = useBox(() => ({
     type: "Static",
     position,
@@ -56,55 +61,71 @@ export default function Wall({
     args: [width, height, depth],
   }));
 
-  // 表面用の設定
+  // displacementScale を削除, テクスチャを明示的に設定
   const frontSettings = {
     color: color,
-    roughness: isBlack ? 0.6 : 0.9,
-    metalness: isBlack ? 0.1 : 0.0,
+    roughness: isBlack ? 0.7 : 0.8,
+    metalness: isBlack ? 0.08 : 0.02,
+    map: textures.map,
+    normalMap: textures.normalMap,
     normalScale: isBlack
-      ? ([0.2, 0.2] as [number, number])
-      : ([0.4, 0.4] as [number, number]),
-    displacementScale: isBlack ? 0.005 : 0.01,
-    envMapIntensity: isBlack ? 0.8 : 0.4,
+      ? new THREE.Vector2(0.8, 0.8)
+      : new THREE.Vector2(0.6, 0.6),
+    roughnessMap: textures.roughnessMap,
+    // displacementScale: isBlack ? 0.05 : 0.03, // 削除
+    aoMapIntensity: isBlack ? 1.0 : 0.7,
+    envMapIntensity: isBlack ? 1.5 : 0.8,
   };
 
-  // 裏面用の設定
+  // displacementScale を削除, テクスチャを明示的に設定
   const backSettings = {
     color: backColor,
-    roughness: isBackBlack ? 0.6 : 0.9,
-    metalness: isBackBlack ? 0.1 : 0.0,
+    roughness: isBackBlack ? 0.7 : 0.8,
+    metalness: isBackBlack ? 0.08 : 0.02,
+    map: textures.map,
+    normalMap: textures.normalMap,
     normalScale: isBackBlack
-      ? ([0.2, 0.2] as [number, number])
-      : ([0.4, 0.4] as [number, number]),
-    displacementScale: isBackBlack ? 0.005 : 0.01,
-    envMapIntensity: isBackBlack ? 0.8 : 0.4,
+      ? new THREE.Vector2(0.8, 0.8)
+      : new THREE.Vector2(0.6, 0.6),
+    roughnessMap: textures.roughnessMap,
+    // displacementScale: isBackBlack ? 0.05 : 0.03, // 削除
+    aoMapIntensity: isBackBlack ? 1.0 : 0.7,
+    envMapIntensity: isBackBlack ? 1.5 : 0.8,
   };
 
   return (
     <group>
-      {/* 物理ボディ用の不可視のボックス */}
+      {/* 物理ボディ用 */}
       <mesh ref={ref} position={position} rotation={rotation} visible={false}>
         <boxGeometry args={[width, height, depth]} />
       </mesh>
-
-      {/* 表面の平面 */}
+      {/* 表面 - 細分化と clearcoat を削除 */}
       <mesh
         position={position}
         rotation={rotation}
         receiveShadow={receiveShadow}
+        castShadow={castShadow}
       >
-        <planeGeometry args={[width, height, 24, 24]} />
-        <meshStandardMaterial {...textures} {...frontSettings} />
+        <planeGeometry args={[width, height]} /> {/* 細分化を削除 */}
+        <meshPhysicalMaterial
+          {...frontSettings}
+          // clearcoat={isBlack ? 0.1 : 0.05} // 削除
+          // clearcoatRoughness={0.8} // 削除
+        />
       </mesh>
-
-      {/* 裏面の平面 */}
+      {/* 裏面 - 細分化と clearcoat を削除 */}
       <mesh
         position={position}
         rotation={[rotation[0], rotation[1] + Math.PI, rotation[2]]}
         receiveShadow={receiveShadow}
+        castShadow={castShadow}
       >
-        <planeGeometry args={[width, height, 24, 24]} />
-        <meshStandardMaterial {...textures} {...backSettings} />
+        <planeGeometry args={[width, height]} /> {/* 細分化を削除 */}
+        <meshPhysicalMaterial
+          {...backSettings}
+          // clearcoat={isBackBlack ? 0.1 : 0.05} // 削除
+          // clearcoatRoughness={0.8} // 削除
+        />
       </mesh>
     </group>
   );

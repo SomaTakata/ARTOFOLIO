@@ -558,6 +558,7 @@ const ProfileTop = ({ username, portofolio }: Props) => {
         />
 
         <Canvas
+          // shadows
           camera={{
             position: [initialPosition.x, initialPosition.y, initialPosition.z],
             fov: 45,
@@ -565,7 +566,7 @@ const ProfileTop = ({ username, portofolio }: Props) => {
             far: 1000,
           }}
         >
-          <ambientLight intensity={0.5} />
+          <ambientLight intensity={0.2} />
           <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
             <GizmoViewport />
           </GizmoHelper>

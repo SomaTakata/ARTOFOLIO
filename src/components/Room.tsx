@@ -9,6 +9,9 @@ import EditIntroButton from "./EditIntroButton";
 import EditSkillsButton from "./EditSkillsButton";
 import Work from "./Work";
 import EditLinksButton from "./EditLinksButton";
+import ObjectLight from "./LightHelper";
+import WallMuseumLight from "./LightHelper";
+import WallTitleLight from "./WallTitleLight";
 
 export const SCALE = 2;
 export const wallHeight = 24;
@@ -139,6 +142,16 @@ export default function Room({ username, portofolio }: Props) {
         workIndex={"0"}
         portofolio={portofolio}
       />
+
+      <WallMuseumLight
+        position={[-55, wallYPosition * SCALE + 15, -60 * SCALE + 0.8]}
+        rotation={[0, 0, 0]}
+      />
+      <WallMuseumLight
+        position={[-5, wallYPosition * SCALE + 15, -60 * SCALE + 0.8]}
+        rotation={[0, 0, 0]}
+      />
+
       {/* 作品2 */}
       <Work
         pictureUrl={portofolio.works[1].pictureUrl}
@@ -153,6 +166,17 @@ export default function Room({ username, portofolio }: Props) {
         workIndex={"1"}
         portofolio={portofolio}
       />
+
+      {/* <WallMuseumLight
+        position={[-85, wallYPosition * SCALE, -30 + 0.8]}
+        rotation={[0, -Math.PI * 0.5, 0]}
+        isWhiteHandle={true}
+      />
+      <WallMuseumLight
+        position={[-85, wallYPosition * SCALE, -30 + 0.8]}
+        rotation={[0, -Math.PI * 0.5, 0]}
+        isWhiteHandle={true}
+      /> */}
       {/* 作品3 */}
       <Work
         pictureUrl={portofolio.works[2].pictureUrl}
@@ -167,6 +191,17 @@ export default function Room({ username, portofolio }: Props) {
         workIndex={"2"}
         portofolio={portofolio}
       />
+
+      {/* <WallMuseumLight
+        position={[-25, wallYPosition * SCALE + 15, -30 + 0.8]}
+        rotation={[0, Math.PI * 0.5, 0]}
+        isWhiteHandle={true}
+      />
+      <WallMuseumLight
+        position={[-75, wallYPosition * SCALE + 15, -30 + 0.8]}
+        rotation={[0, Math.PI * 0.5, 0]}
+        isWhiteHandle={true}
+      /> */}
       {/* 作品4 */}
       <Work
         // 画像関連のプロパティ
@@ -185,6 +220,16 @@ export default function Room({ username, portofolio }: Props) {
         portofolio={portofolio}
       />
 
+      {/* <WallMuseumLight
+        position={[-55, wallYPosition * SCALE + 15, -60 + 0.8]}
+        rotation={[0, Math.PI, 0]}
+      />
+
+      <WallMuseumLight
+        position={[-55, wallYPosition * SCALE + 15, -60 + 0.8]}
+        rotation={[0, Math.PI, 0]}
+      /> */}
+
       <AreaTitle
         title="SKILLS"
         desc="This area showcases my strongest tech stack."
@@ -193,13 +238,22 @@ export default function Room({ username, portofolio }: Props) {
           wallYPosition * SCALE + 4,
           60 * SCALE - 0.3,
         ]}
-        titleRotation={[0, -Math.PI, 0]}
+        titleRotation={[0, Math.PI, 0]}
         descPoisiton={[
           -67.5 + 7.5 + 20,
           wallYPosition * SCALE,
           60 * SCALE - 0.3,
         ]}
-        descRotation={[0, -Math.PI, 0]}
+        descRotation={[0, Math.PI, 0]}
+      />
+
+      <WallTitleLight
+        position={[
+          -67.5 + 7.5 + 1,
+          wallYPosition * SCALE + 12,
+          60 * SCALE - 0.3,
+        ]}
+        rotation={[0, -Math.PI, 0]}
       />
 
       <AreaTitle
@@ -243,6 +297,15 @@ export default function Room({ username, portofolio }: Props) {
         portofolio={portofolio}
       />
 
+      <WallMuseumLight
+        position={[
+          -45 * SCALE + 0.5,
+          wallYPosition * SCALE + 15,
+          120 - 26 - 24 - 23 - 24 - 23 - 12,
+        ]}
+        rotation={[0, Math.PI * 0.5, 0]}
+      />
+
       <EditSkillsButton
         skills={portofolio.skills}
         editNum={1}
@@ -259,6 +322,15 @@ export default function Room({ username, portofolio }: Props) {
           120 - 26 - 24 - 23 - 12,
         ]}
         pictureRotation={[0, Math.PI * 0.5, 0]}
+      />
+
+      <WallMuseumLight
+        position={[
+          -45 * SCALE + 0.5,
+          wallYPosition * SCALE + 15,
+          120 - 26 - 24 - 23 - 12,
+        ]}
+        rotation={[0, Math.PI * 0.5, 0]}
       />
 
       <EditSkillsButton
@@ -279,6 +351,15 @@ export default function Room({ username, portofolio }: Props) {
         pictureRotation={[0, Math.PI * 0.5, 0]}
       />
 
+      <WallMuseumLight
+        position={[
+          -45 * SCALE + 0.5,
+          wallYPosition * SCALE + 15,
+          120 - 26 - 12,
+        ]}
+        rotation={[0, Math.PI * 0.5, 0]}
+      />
+
       {/*ピンク壁のスキル絵画 */}
       <EditSkillsButton
         skills={portofolio.skills}
@@ -294,6 +375,12 @@ export default function Room({ username, portofolio }: Props) {
         pictureRotation={[0, -Math.PI * 0.5, 0]}
         color="white"
         textColor="black"
+      />
+
+      <WallMuseumLight
+        position={[-15 * SCALE - 0.8, wallYPosition * SCALE + 15, 60 - 21 - 12]}
+        rotation={[0, -Math.PI * 0.5, 0]}
+        isWhiteHandle={true}
       />
 
       <EditSkillsButton
@@ -314,6 +401,16 @@ export default function Room({ username, portofolio }: Props) {
         pictureRotation={[0, -Math.PI * 0.5, 0]}
         color="white"
         textColor="black"
+      />
+
+      <WallMuseumLight
+        position={[
+          -15 * SCALE - 0.8,
+          wallYPosition * SCALE + 15,
+          60 - 21 - 24 - 20 - 12,
+        ]}
+        rotation={[0, -Math.PI * 0.5, 0]}
+        isWhiteHandle={true}
       />
 
       {/* リンク 壁右側*/}
@@ -340,6 +437,15 @@ export default function Room({ username, portofolio }: Props) {
         pictureUrl="/qiita.png"
       />
 
+      <WallMuseumLight
+        position={[
+          45 * SCALE - 0.5,
+          wallYPosition * SCALE + 15,
+          -120 + 21 + 12,
+        ]}
+        rotation={[0, -Math.PI * 0.5, 0]}
+        isWhiteHandle={false}
+      />
       <EditLinksButton
         skills={portofolio.skills}
         editNum={3}
@@ -362,6 +468,16 @@ export default function Room({ username, portofolio }: Props) {
         currentSNS={portofolio.sns}
         pictureUrl="/zenn.png"
       />
+
+      <WallMuseumLight
+        position={[
+          45 * SCALE - 0.5,
+          wallYPosition * SCALE + 15,
+          -120 + 21 + 12 + 20 + 24,
+        ]}
+        rotation={[0, -Math.PI * 0.5, 0]}
+        isWhiteHandle={false}
+      />
       {/* リンク 壁左側*/}
       <EditLinksButton
         skills={portofolio.skills}
@@ -376,6 +492,12 @@ export default function Room({ username, portofolio }: Props) {
         fieldName="otherwise"
         currentSNS={portofolio.sns}
         pictureUrl="/otherwise.png"
+      />
+
+      <WallMuseumLight
+        position={[30 + 0.8, wallYPosition * SCALE + 15, -120 + 21 + 12]}
+        rotation={[0, Math.PI * 0.5, 0]}
+        isWhiteHandle={false}
       />
 
       <EditLinksButton
@@ -401,6 +523,16 @@ export default function Room({ username, portofolio }: Props) {
         pictureUrl="/x.png"
       />
 
+      <WallMuseumLight
+        position={[
+          30 + 0.8,
+          wallYPosition * SCALE + 15,
+          -120 + 21 + 12 + 20 + 24,
+        ]}
+        rotation={[0, Math.PI * 0.5, 0]}
+        isWhiteHandle={false}
+      />
+
       {/* リンク 壁正面*/}
       <EditLinksButton
         skills={portofolio.skills}
@@ -415,6 +547,12 @@ export default function Room({ username, portofolio }: Props) {
         fieldName="github"
         currentSNS={portofolio.sns}
         pictureUrl="/github.png"
+      />
+
+      <WallMuseumLight
+        position={[60, wallYPosition * SCALE + 15, -120 + 0.8]}
+        rotation={[0, 0, 0]}
+        isWhiteHandle={true}
       />
 
       <Arch
@@ -494,7 +632,7 @@ export default function Room({ username, portofolio }: Props) {
           45 * SCALE,
         ]}
       />
-      <ambientLight intensity={3} />
+
       {/* 天井 */}
       <Ceiling />
     </>
