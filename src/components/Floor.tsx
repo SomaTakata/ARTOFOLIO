@@ -11,7 +11,7 @@ export default function Floor() {
     const groutColor = new THREE.Color(0xd3d5d2);
 
     // タイルの色（ダークグレー）- 画像のような暗めの色に
-    const tileColor = new THREE.Color(0xa1a3a6);
+    const tileColor = new THREE.Color(0x707173);
 
     // タイルの質感用のハイライト（少し明るめのダークグレー）
     const highlightColor = new THREE.Color(0xc0c0c0);
