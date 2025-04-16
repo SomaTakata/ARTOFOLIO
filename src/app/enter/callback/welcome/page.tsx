@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
-import PostUserName from "@/components/templates/PostUserName/PostUserName";
+import WelocomeWrapper from "@/components/not-musium/welocomeWrapper";
+import { env } from "@/env.mjs";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -12,11 +13,11 @@ export default async function Page() {
     redirect("/");
   }
 
-  const res = await fetch("http://localhost:3000/api/me/username", {
+  const res = await fetch(`${env.NEXT_PUBLIC_APP_URL}/api/me/username`, {
     method: "GET",
     headers: await headers()
   })
-  
+
   const { username } = await res.json();
 
   if (username) {
@@ -25,7 +26,7 @@ export default async function Page() {
 
   return (
     <>
-      <PostUserName />
+      <WelocomeWrapper />
     </>
   );
 }

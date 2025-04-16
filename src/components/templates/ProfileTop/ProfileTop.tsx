@@ -63,7 +63,7 @@ interface TeleportContextType {
 }
 
 const TeleportContext = createContext<TeleportContextType>({
-  teleport: () => {},
+  teleport: () => { },
   currentLocation: null,
 });
 
@@ -520,7 +520,7 @@ const ProfileTop = ({ username, portofolio }: Props) => {
       const pos = location.position;
       const distance = Math.sqrt(
         Math.pow(currentPosition.x - pos.x, 2) +
-          Math.pow(currentPosition.z - pos.z, 2)
+        Math.pow(currentPosition.z - pos.z, 2)
       );
 
       // 一定範囲内で最も近い地点を記録
