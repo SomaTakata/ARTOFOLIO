@@ -18,4 +18,8 @@ Now, let's step into the museum.
 I’ve entered my own museum.
 <img width="1512" alt="スクリーンショット 2025-04-17 23 58 59" src="https://github.com/user-attachments/assets/d963fa2d-2487-4c47-9afc-0b143fcd84a8" />
 
-# 
+## Display your works in your own museum
+
+First, let’s register a brief self-introduction on the entrance wall.
+<img width="1512" alt="スクリーンショット 2025-04-18 0 14 34" src="https://github.com/user-attachments/assets/11bef74d-0df4-4cfd-b797-9a82faceedf9" />
+
