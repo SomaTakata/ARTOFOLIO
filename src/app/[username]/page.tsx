@@ -1,7 +1,7 @@
 import ProfileTop from "@/components/templates/ProfileTop/ProfileTop";
 import { env } from "@/env.mjs";
 import { ProfileWithTypedSkills } from "@/server/models/user.schema";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 
 type Props = {
   params: Promise<{
