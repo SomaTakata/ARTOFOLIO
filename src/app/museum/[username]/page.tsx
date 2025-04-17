@@ -24,12 +24,13 @@ export default async function Page({ params }: Props) {
 
   if (!res.ok) {
     if (res.status === 404) {
-      return <div>ユーザーが見つかりません</div>;
+      return <div>User not found</div>;
     }
-    return <div>エラーが発生しました</div>;
+    return <div>An error has occurred</div>;
   }
 
   const portofolio: ProfileWithTypedSkills = await res.json();
+  console.log(portofolio)
 
   return (
     <>

@@ -113,6 +113,13 @@
       "when": 1744920148677,
       "tag": "0015_cultured_hellion",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1744926843957,
+      "tag": "0016_chubby_mister_sinister",
+      "breakpoints": true
     }
   ]
 }
