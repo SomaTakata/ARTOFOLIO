@@ -21,7 +21,6 @@ export default async function Page() {
     method: "GET",
     headers: headerData,
   });
-
   const data = await res.json();
 
   if (data.username) {
