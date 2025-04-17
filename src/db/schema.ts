@@ -2,9 +2,9 @@ import { relations } from 'drizzle-orm';
 import { boolean, integer, json, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 const initialSkills = [
-       { name: "Next.js", level: "5" },
+       { name: "React", level: "5" },
        { name: "Tailwind", level: "3" },
-       { name: "Prisma", level: "1" },
+       { name: "Vue", level: "1" },
        { name: "Auth.js", level: "3" },
        { name: "Supabase", level: "4" },
 ];
