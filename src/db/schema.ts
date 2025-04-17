@@ -2,9 +2,9 @@ import { relations } from 'drizzle-orm';
 import { boolean, integer, json, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 const initialSkills = [
-       { name: "React", level: "2" },
+       { name: "Next.js", level: "5" },
        { name: "Tailwind", level: "3" },
-       { name: "Vue", level: "1" },
+       { name: "Prisma", level: "1" },
        { name: "Auth.js", level: "3" },
        { name: "Supabase", level: "4" },
 ];
@@ -37,11 +37,11 @@ const initialWorks = [
 ]
 
 const initialSNS = {
-       zenn: "",
-       qiita: "",
-       twitter: "",
+       linkedin: "",
+       facebook: "",
+       x: "",
        github: "",
-       otherwise: ""
+       other: ""
 };
 
 export const user = pgTable("user", {

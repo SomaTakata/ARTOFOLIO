@@ -34,7 +34,7 @@ export const techs = [
   "Supabase",
 ] as const;
 
-type SNSField = "qiita" | "zenn" | "github" | "twitter" | "otherwise";
+type SNSField = "linkedin" | "facebook" | "github" | "x" | "other";
 
 type Props = {
   skills: SkillType[];
@@ -74,12 +74,12 @@ export default function EditLinksButton({
       switch (fieldName) {
         case "github":
           return val.startsWith("https://github.com/");
-        case "twitter":
-          return val.startsWith("https://twitter.com/");
-        case "zenn":
-          return val.startsWith("https://zenn.dev/");
-        case "qiita":
-          return val.startsWith("https://qiita.com/");
+        case "x":
+          return val.startsWith("https://x.com/");
+        case "linkedin":
+          return val.startsWith("https://linkedin.com/");
+        case "facebook":
+          return val.startsWith("https://facebook.com/");
         default:
           return true;
       }

@@ -503,9 +503,9 @@ export default function Room({ username, portofolio }: Props) {
         ]}
         frameRotation={[0, -Math.PI * 0.5, 0]}
         color="black"
-        fieldName="qiita"
+        fieldName="facebook"
         currentSNS={portofolio.sns}
-        pictureUrl="/qiita.png"
+        pictureUrl="/facebook.png"
       />
 
       <WallMuseumLight
@@ -528,9 +528,9 @@ export default function Room({ username, portofolio }: Props) {
         ]}
         frameRotation={[0, -Math.PI * 0.5, 0]}
         color="black"
-        fieldName="zenn"
+        fieldName="linkedin"
         currentSNS={portofolio.sns}
-        pictureUrl="/zenn.png"
+        pictureUrl="/linkedin.png"
       />
 
       <WallMuseumLight
@@ -557,9 +557,9 @@ export default function Room({ username, portofolio }: Props) {
         framePosition={[30 + 1.1, wallYPosition * SCALE, -120 + 21 + 12]}
         frameRotation={[0, Math.PI * 0.5, 0]}
         color="black"
-        fieldName="otherwise"
+        fieldName="other"
         currentSNS={portofolio.sns}
-        pictureUrl="/otherwise.png"
+        pictureUrl="/other.png"
       />
 
       <WallMuseumLight
@@ -579,7 +579,7 @@ export default function Room({ username, portofolio }: Props) {
         ]}
         frameRotation={[0, Math.PI * 0.5, 0]}
         color="black"
-        fieldName="twitter"
+        fieldName="x"
         currentSNS={portofolio.sns}
         pictureUrl="/x.png"
       />

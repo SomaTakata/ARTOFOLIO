@@ -1,0 +1,1 @@
+ALTER TABLE "user" ALTER COLUMN "sns" SET DEFAULT '{"linkedIn":"","facebook":"","x":"","github":"","other":""}'::jsonb;
