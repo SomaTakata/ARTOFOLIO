@@ -99,8 +99,10 @@ export const getPortofolioHandler: RouteHandler<typeof getPortofolioRoute> = asy
     return c.json({ error: "Not Found" }, 404);
   }
 
+  const cookie = c.req.header('cookie') ?? '';
+
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: c.req.raw.headers
   })
 
   const userId = session?.user.id
