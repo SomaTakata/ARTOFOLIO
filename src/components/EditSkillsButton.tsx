@@ -1,5 +1,5 @@
 "use client";
-import { Html, Text } from "@react-three/drei";
+import { Html, Text, RoundedBox } from "@react-three/drei";
 import { SCALE, wallYPosition } from "./Room";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import {
@@ -50,19 +50,12 @@ export default function EditSkillsButton({
   editNum,
   portofolio,
   color = "black",
-  textColor = "white",
   framePosition = [
-    -45 * SCALE + 0.5,
-    wallYPosition * SCALE,
-    120 - 26 - 24 - 23 - 24 - 23 - 12,
-  ],
-  frameRotation = [0, Math.PI * 0.5, 0],
-  picturePosition = [
     -45 * SCALE + 1.1,
     wallYPosition * SCALE,
     120 - 26 - 24 - 23 - 24 - 23 - 12,
   ],
-  pictureRotation = [0, Math.PI * 0.5, 0],
+  frameRotation = [0, Math.PI * 0.5, 0],
 }: Props) {
   const { name, level } = skills[editNum];
 
@@ -70,66 +63,54 @@ export default function EditSkillsButton({
   const form = useForm<FormData>({
     resolver: zodResolver(SkillSchema),
     defaultValues: {
-      name: name,
-      level: level,
+      name,
+      level,
     },
   });
+  const { handleSubmit, control, formState } = form;
 
   const router = useRouter();
 
   const onSubmit = async (data: FormData) => {
-    const { name, level } = data;
-
     const updatedSkills = [...skills];
-
     updatedSkills[editNum] = {
       ...updatedSkills[editNum],
-      name: name,
-      level: level,
+      name: data.name,
+      level: data.level,
     };
-
-    console.log(updatedSkills);
 
     await fetch(`/api/profile/skills`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        skills: updatedSkills,
-      }),
+      body: JSON.stringify({ skills: updatedSkills }),
     });
-
     router.refresh();
+    setShowPopup(false);
   };
 
   return (
     <group>
-      {portofolio.editable && <mesh
-        castShadow
-        onClick={() => {
-          setShowPopup(true);
-        }}
-        onPointerOver={() => (document.body.style.cursor = "pointer")}
-        onPointerOut={() => (document.body.style.cursor = "default")}
-      >
+      {portofolio.editable ? (
+        <mesh
+          castShadow
+          onClick={() => setShowPopup(true)}
+          onPointerOver={() => (document.body.style.cursor = "pointer")}
+          onPointerOut={() => (document.body.style.cursor = "default")}
+        >
+          <Painting
+            pictureUrl={`${skills[editNum].name}.png`}
+            framePostion={framePosition}
+            frameRotation={frameRotation}
+            frameColor={color}
+          />
+        </mesh>
+      ) : (
         <Painting
-          pictureUrl={`${portofolio.skills[editNum].name}.png`}
+          pictureUrl={`${skills[editNum].name}.png`}
           framePostion={framePosition}
           frameRotation={frameRotation}
-          picturePosition={picturePosition}
-          pictureRotation={pictureRotation}
-          frameColor={color}
-        />
-      </mesh>}
-
-      {!portofolio.editable && (
-        <Painting
-          pictureUrl={`${portofolio.skills[editNum].name}.png`}
-          framePostion={framePosition}
-          frameRotation={frameRotation}
-          picturePosition={picturePosition}
-          pictureRotation={pictureRotation}
           frameColor={color}
         />
       )}
@@ -138,20 +119,29 @@ export default function EditSkillsButton({
         position={[framePosition[0], framePosition[1] - 15, framePosition[2]]}
         rotation={frameRotation}
       >
-        <mesh>
-          <planeGeometry args={[15, 3]} />
-          <meshStandardMaterial color={color} />
-        </mesh>
+        {/* Black glossy plate */}
+        <RoundedBox
+          args={[15, 3, 0.5]}
+          radius={0.4}
+          smoothness={4}
+          castShadow
+        >
+          <meshStandardMaterial
+            color="#000000"
+            metalness={1.0}
+            roughness={0.05}
+          />
+        </RoundedBox>
         <Text
-          position={[0, 0, 0.1]}
+          position={[0, 0, 0.3]}
           fontSize={1.2}
-          color={textColor}
+          color="#ffffff"
           anchorX="center"
           anchorY="middle"
           fontWeight={700}
+          font="/font/geist-mono.ttf"
         >
-          Lv.{portofolio.skills[editNum].level}{" "}
-          {portofolio.skills[editNum].name}
+          {`Lv.${portofolio.skills[editNum].level} ${portofolio.skills[editNum].name}`}
         </Text>
       </group>
 
@@ -159,14 +149,13 @@ export default function EditSkillsButton({
         <Dialog open={showPopup} onOpenChange={setShowPopup}>
           <DialogContent onInteractOutside={(e) => e.preventDefault()}>
             <DialogTitle>Please select your strongest skill.</DialogTitle>
-
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={handleSubmit(onSubmit)}
                 className="space-y-6"
               >
                 <FormField
-                  control={form.control}
+                  control={control}
                   name="name"
                   render={({ field }) => (
                     <FormItem>
@@ -197,7 +186,7 @@ export default function EditSkillsButton({
                   )}
                 />
                 <FormField
-                  control={form.control}
+                  control={control}
                   name="level"
                   render={({ field }) => (
                     <FormItem>
@@ -227,7 +216,9 @@ export default function EditSkillsButton({
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">Update</Button>
+                <Button type="submit" className="w-full cursor-pointer">
+                  {formState.isSubmitting ? "Sending..." : "Update"}
+                </Button>
               </form>
             </Form>
           </DialogContent>

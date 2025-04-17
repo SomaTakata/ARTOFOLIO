@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { GizmoHelper, GizmoViewport, OrbitControls } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import Room from "@/components/Room";
 import {
   useEffect,
@@ -25,6 +25,7 @@ import {
   Briefcase,
   Link as LinkIcon,
 } from "lucide-react";
+import LoginStateLabel from "@/components/loginStateLabel";
 
 // 各テレポート地点の定義（位置と初期向きを含む）
 const LOCATIONS = {
@@ -400,7 +401,7 @@ function ControlsUI({
         </div>
 
         <div className="flex flex-col gap-2 mt-2">
-          <h3 className="text-xs font-semibold opacity-70">テレポート</h3>
+          <h3 className="text-xs font-semibold opacity-70 text-white">teleportation</h3>
           <div className="grid grid-cols-2 gap-2">
             {(Object.keys(LOCATIONS) as Array<LocationKey>).map((key) => {
               const location = LOCATIONS[key];
@@ -421,18 +422,18 @@ function ControlsUI({
         </div>
 
         <div className="mt-2 text-sm">
-          <div className="flex flex-col gap-1">
-            <Badge variant="outline" className="flex justify-between">
+          <div className="flex gap-1">
+            <Badge variant="outline" className="text-white flex justify-between">
               <span>X:</span> <span>{playerPosition.x.toFixed(2)}</span>
             </Badge>
-            <Badge variant="outline" className="flex justify-between">
+            <Badge variant="outline" className="text-white flex justify-between">
               <span>Z:</span> <span>{playerPosition.z.toFixed(2)}</span>
             </Badge>
           </div>
         </div>
       </div>
     </div>
-  );
+  ); 
 }
 
 type Props = {
@@ -556,6 +557,10 @@ const ProfileTop = ({ username, portofolio }: Props) => {
           setCameraMode={setCameraMode}
           playerPosition={currentPosition}
         />
+        <LoginStateLabel 
+        editable={portofolio.editable}
+        portofolio={portofolio}
+        />
 
         <Canvas
           // shadows
@@ -566,10 +571,6 @@ const ProfileTop = ({ username, portofolio }: Props) => {
             far: 1000,
           }}
         >
-          <ambientLight intensity={0.2} />
-          <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
-            <GizmoViewport />
-          </GizmoHelper>
 
           <CustomOrbitControls cameraMode={cameraMode} target={cameraTarget} />
 

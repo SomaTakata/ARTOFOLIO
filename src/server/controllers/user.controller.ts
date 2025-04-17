@@ -104,6 +104,14 @@ export const getPortofolioHandler: RouteHandler<typeof getPortofolioRoute> = asy
   })
 
   const userId = session?.user.id
+  let loginUser = ""
+
+  if(userId){
+    const loginUserData = await db.
+    select().from(user).where(eq(user.id, userId)).limit(1)
+
+    loginUser = loginUserData[0].username ?? ""
+  }
 
   const {
     id,
@@ -112,7 +120,7 @@ export const getPortofolioHandler: RouteHandler<typeof getPortofolioRoute> = asy
     intro,
     skills,
     sns,
-    works
+    works,
   } = result[0];
 
   const editable = userId === id
@@ -128,7 +136,8 @@ export const getPortofolioHandler: RouteHandler<typeof getPortofolioRoute> = asy
       skills,
       sns,
       works,
-      editable
+      editable,
+      loginUser
     }, 200);
 };
 

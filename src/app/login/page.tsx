@@ -30,7 +30,7 @@ export default function Login() {
   });
 
   const onSubmit = () => {
-    signIn();
+    signIn("/enter/callback/welcome");
   };
 
   return (

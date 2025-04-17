@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Texture } from "three";
 import EditWorksButton from "./EditWorksButton";
 import { ProfileWithTypedSkills } from "@/server/models/user.schema";
+import { ClickableLink } from "./ClickableLink";
 
 /**
  * ワーク（作品）を表示するためのコンポーネント
@@ -25,7 +26,9 @@ export default function Work({
   descriptionPosition = [0, 0, 0],
   workIndex,
   portofolio,
+  siteUrl,
 }: {
+  siteUrl: string;
   pictureUrl: string;
   framePosition?: [number, number, number];
   picturePosition?: [number, number, number];
@@ -112,13 +115,13 @@ export default function Work({
       {/* 画像プレビュー部分 */}
       <group>
         {/* フレーム - 常に固定の横長サイズ */}
-        <mesh castShadow position={framePosition}>
+        <mesh castShadow receiveShadow position={framePosition}>
           <boxGeometry args={[FRAME_WIDTH, FRAME_HEIGHT]} />
           <meshStandardMaterial color={color} />
         </mesh>
 
         {/* 写真 - テクスチャをスケーリングして表示 */}
-        <mesh castShadow position={picturePosition}>
+        <mesh castShadow receiveShadow position={picturePosition}>
           <planeGeometry
             args={[FRAME_WIDTH - FRAME_PADDING, FRAME_HEIGHT - FRAME_PADDING]}
           />
@@ -130,8 +133,7 @@ export default function Work({
             workIndex={workIndex}
             title={title}
             desc={description}
-            siteUrl={"/"}
-            portofolio={portofolio}
+            siteUrl={siteUrl}
             position={[
               picturePosition[0],
               picturePosition[1] - 15,
@@ -144,18 +146,38 @@ export default function Work({
       {/* テキスト説明部分 */}
       <group>
         {/* タイトル */}
-        <Text
-          position={titlePosition}
-          color={color}
-          fontSize={3}
-          maxWidth={100}
-          fontWeight={700}
-          lineHeight={1.2}
-          anchorX="left"
-          anchorY="middle"
+        {portofolio.works[Number(workIndex)].siteUrl && <ClickableLink
+          url={portofolio.works[Number(workIndex)].siteUrl}
         >
-          {title}
-        </Text>
+          <Text
+            position={titlePosition}
+            color={color}
+            fontSize={3}
+            maxWidth={100}
+            fontWeight={700}
+            lineHeight={1.2}
+            anchorX="left"
+            anchorY="middle"
+          >
+            🔗{title}
+          </Text>
+        </ClickableLink>}
+
+        {!portofolio.works[Number(workIndex)].siteUrl &&
+          <Text
+            position={titlePosition}
+            color={color}
+            fontSize={3}
+            maxWidth={100}
+            fontWeight={700}
+            lineHeight={1.2}
+            anchorX="left"
+            anchorY="middle"
+          >
+            {title}
+          </Text>}
+
+
 
         {/* 説明文 */}
         <Text

@@ -1,4 +1,3 @@
-import { techs } from "@/components/EditLinksButton";
 import { user } from "@/db/schema";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -9,7 +8,7 @@ export const UserInputSchema = createInsertSchema(user, {
   intro: (schema) =>
     schema
       .min(1, { message: "Nothing has been entered." })
-      .max(40, { message: "Please enter within 40 characters." }),
+      .max(100, { message: "Please enter within 100 characters." }),
 });
 
 export const UsernameSchema = UserSelectSchema.pick({
@@ -54,7 +53,8 @@ export const portofolioSchema = UserSelectSchema.pick({
 }).extend({
   skills: SkillsSchema,
   works: WorksSchema,
-  editable: z.boolean()
+  editable: z.boolean(),
+  loginUser: z.string()
 });
 
 export const SnsSchema = z.object({

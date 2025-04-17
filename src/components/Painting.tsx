@@ -10,7 +10,6 @@ export default function Painting({
   frameHeight = 24,
   frameDepth = 1.5, // 額縁の厚み
   frameBorderWidth = 1, // 額縁の縁の幅
-  useWallTexture = false, // 新しいパラメータ: 壁のテクスチャを使用するかどうか
 }: {
   pictureUrl: string;
   framePostion?: [number, number, number];
@@ -40,12 +39,12 @@ export default function Painting({
   return (
     <group position={framePostion} rotation={frameRotation}>
       {/** 外側の額縁 */}
-      <mesh receiveShadow>
+      <mesh castShadow>
         <boxGeometry args={[frameWidth, frameHeight, frameDepth]} />
         <meshPhysicalMaterial
           color={frameColor}
-          roughness={0.8}
-          metalness={0.02}
+          metalness={1.0}
+          roughness={0.05}
           map={textures.map}
           normalMap={textures.normalMap}
           normalScale={new THREE.Vector2(0.6, 0.6)}

@@ -2,37 +2,37 @@ import { relations } from 'drizzle-orm';
 import { boolean, integer, json, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 const initialSkills = [
-       { name: "React", level: "3" },
-       { name: "React", level: "3" },
-       { name: "React", level: "3" },
-       { name: "React", level: "3" },
-       { name: "React", level: "3" },
+       { name: "React", level: "2" },
+       { name: "Tailwind", level: "3" },
+       { name: "Vue", level: "1" },
+       { name: "Auth.js", level: "3" },
+       { name: "Supabase", level: "4" },
 ];
 
 const initialWorks = [
        {
-              title: "test",
-              desc: "test",
-              siteUrl: "https://example.com",
-              pictureUrl: "/portfolio1.png",
+              title: "Under preparation",
+              desc: "We apologize for the inconvenience.\nThe painting is currently being prepared.",
+              siteUrl: "",
+              pictureUrl: "/first-work.png",
        },
        {
-              title: "test",
-              desc: "test",
-              siteUrl: "https://example.com",
-              pictureUrl: "/portfolio1.png",
+              title: "Under preparation",
+              desc: "We apologize for the inconvenience.\nThe painting is currently being prepared.",
+              siteUrl: "",
+              pictureUrl: "/first-work.png",
        },
        {
-              title: "test",
-              desc: "test",
-              siteUrl: "https://example.com",
-              pictureUrl: "/portfolio1.png",
+              title: "Under preparation",
+              desc: "We apologize for the inconvenience.\nThe painting is currently being prepared.",
+              siteUrl: "",
+              pictureUrl: "/first-work.png",
        },
        {
-              title: "test",
-              desc: "test",
-              siteUrl: "https://example.com",
-              pictureUrl: "/portfolio1.png",
+              title: "Under preparation",
+              desc: "We apologize for the inconvenience.\nThe painting is currently being prepared.",
+              siteUrl: "",
+              pictureUrl: "/first-work.png",
        },
 ]
 
@@ -51,7 +51,7 @@ export const user = pgTable("user", {
        emailVerified: boolean('email_verified').notNull(),
        image: text('image'),
        username: text('username').unique(),
-       intro: text('intro').notNull().default("ppppp"),
+       intro: text('intro').notNull().default("Click the Update button to register a brief self-introduction!"),
        skills: jsonb('skills').notNull().default(initialSkills),
        works: jsonb("works").notNull().default(initialWorks),
        sns: jsonb("sns").notNull().default(initialSNS),
