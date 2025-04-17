@@ -5,7 +5,12 @@ For this Next.js hackathon project, I chose a black-and-white color scheme for t
 
 <img width="1512" alt="スクリーンショット 2025-04-17 19 19 20" src="https://github.com/user-attachments/assets/95dc4a61-9e8a-4826-b5ff-7cecaa5aaa9d" />
 
+# Demo Video
+https://github.com/user-attachments/assets/73497134-0a8a-4157-ab31-6c1db6beb911
+
+
 # Key contribution
+
 - I paid special attention to the placement of lights and the texture of the walls to make it look like a real museum.
 - I generated the indoor plants in the museum using Luma AI. This was my first time incorporating Luma AI assets into a product with Three.js.
 - Inspired by the Next.js Hackathon, I designed the entire site — from the museum interior to the landing page — using black and white as the main theme.
