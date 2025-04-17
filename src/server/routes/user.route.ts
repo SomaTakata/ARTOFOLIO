@@ -1,5 +1,5 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { IntroInputSchema, portofolioSchema, SkillsSchema, SnsSchema, UpdateWorkPayloadSchema, UserCheckQuerySchema, UsernameInputSchema, UsernameSchema, WorksSchema } from "../models/user.schema";
+import { IntroInputSchema, portofolioSchema, SkillsSchema, SnsSchema, UpdateWorkPayloadSchema, UserCheckQuerySchema, UsernameInputSchema, UsernameSchema } from "../models/user.schema";
 import { ErrorSchema } from "../models/error.schema";
 
 export const getUsernameRoute = createRoute({

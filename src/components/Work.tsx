@@ -54,7 +54,7 @@ export default function Work({
   const FRAME_PADDING = 2;
 
   // 画像のサイズと縦横比を管理する状態
-  const [dimensions, setDimensions] = useState<{
+  const [, setDimensions] = useState<{
     width: number;
     height: number;
     pictureScale: number;

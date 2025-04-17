@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
@@ -16,9 +17,11 @@ export default function ShowcaseCard({
   return (
     <div className="group relative overflow-hidden rounded-lg aspect-[3/2]">
       <Link href={link}>
-        <img
+        <Image
           src={image}
           alt={title}
+          width={300}
+          height={200}
           className="object-cover w-full h-full transform transition-transform duration-300 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-6">

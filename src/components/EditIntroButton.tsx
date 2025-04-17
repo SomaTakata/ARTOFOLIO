@@ -94,7 +94,7 @@ export default function EditIntroButton({ currentIntro }: { currentIntro: string
         <Html transform center position={[0, 4, 0]}>
           <Dialog open onOpenChange={setShowPopup}>
             <DialogContent onInteractOutside={(e) => e.preventDefault()}>
-              <DialogTitle>Who's you?</DialogTitle>
+              <DialogTitle>Who&apos;s you?</DialogTitle>
               <Form {...form}>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                   <FormField

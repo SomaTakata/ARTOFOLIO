@@ -349,6 +349,7 @@ interface OrbitControlsProps {
 // Custom OrbitControls that maintains camera state
 function CustomOrbitControls({ cameraMode, target }: OrbitControlsProps) {
   // OrbitControlsのインスタンスを参照
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
 
   useEffect(() => {
@@ -433,7 +434,7 @@ function ControlsUI({
         </div>
       </div>
     </div>
-  ); 
+  );
 }
 
 type Props = {
@@ -447,7 +448,7 @@ const ProfileTop = ({ username, portofolio }: Props) => {
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
   const [cameraTarget, setCameraTarget] = useState<Vector3 | null>(null);
   const initialPosition = LOCATIONS.HOME.position.clone();
-  const [currentOffset, setCurrentOffset] = useState({ x: 0, y: 0 });
+  const [, setCurrentOffset] = useState({ x: 0, y: 0 });
   const [currentPosition, setCurrentPosition] = useState({
     x: initialPosition.x,
     y: initialPosition.y,
@@ -557,9 +558,9 @@ const ProfileTop = ({ username, portofolio }: Props) => {
           setCameraMode={setCameraMode}
           playerPosition={currentPosition}
         />
-        <LoginStateLabel 
-        editable={portofolio.editable}
-        portofolio={portofolio}
+        <LoginStateLabel
+          editable={portofolio.editable}
+          portofolio={portofolio}
         />
 
         <Canvas

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { env } from "@/env.mjs";
+import Image from "next/image";
 
 type Props = {
   username: string;
@@ -10,7 +11,7 @@ export default function WelcomeMessage({ username }: Props) {
   return (
     <div className="h-screen grid place-items-center">
       <div>
-        <img src="/museum-logo.png" width={70} height={70} className="mx-auto mb-[20px]" />
+        <Image src="/museum-logo.png" alt="" width={70} height={70} className="mx-auto mb-[20px]" />
         <p className="justify-center items-center mb-[20px] flex text-sm font-bold border px-5 text-gray-600 bg-gray-200 py-2 rounded-3xl">
           https://artfolio.vercel.app/museum/{username}
         </p>

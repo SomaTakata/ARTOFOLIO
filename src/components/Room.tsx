@@ -502,14 +502,7 @@ export default function Room({ username, portofolio }: Props) {
           -120 + 21 + 12,
         ]}
         frameRotation={[0, -Math.PI * 0.5, 0]}
-        picturePosition={[
-          45 * SCALE - 1.5,
-          wallYPosition * SCALE,
-          -120 + 21 + 12,
-        ]}
-        pictureRotation={[0, -Math.PI * 0.5, 0]}
         color="black"
-        textColor="white"
         fieldName="qiita"
         currentSNS={portofolio.sns}
         pictureUrl="/qiita.png"
@@ -534,14 +527,7 @@ export default function Room({ username, portofolio }: Props) {
           -120 + 21 + 12 + 20 + 24,
         ]}
         frameRotation={[0, -Math.PI * 0.5, 0]}
-        picturePosition={[
-          45 * SCALE - 1.5,
-          wallYPosition * SCALE,
-          -120 + 21 + 12 + 20 + 24,
-        ]}
-        pictureRotation={[0, -Math.PI * 0.5, 0]}
         color="black"
-        textColor="white"
         fieldName="zenn"
         currentSNS={portofolio.sns}
         pictureUrl="/zenn.png"
@@ -570,10 +556,7 @@ export default function Room({ username, portofolio }: Props) {
         portofolio={portofolio}
         framePosition={[30 + 1.1, wallYPosition * SCALE, -120 + 21 + 12]}
         frameRotation={[0, Math.PI * 0.5, 0]}
-        picturePosition={[30 + 1.5, wallYPosition * SCALE, -120 + 21 + 12]}
-        pictureRotation={[0, Math.PI * 0.5, 0]}
         color="black"
-        textColor="white"
         fieldName="otherwise"
         currentSNS={portofolio.sns}
         pictureUrl="/otherwise.png"
@@ -595,14 +578,7 @@ export default function Room({ username, portofolio }: Props) {
           -120 + 21 + 12 + 20 + 24,
         ]}
         frameRotation={[0, Math.PI * 0.5, 0]}
-        picturePosition={[
-          30 + 1.5,
-          wallYPosition * SCALE,
-          -120 + 21 + 12 + 20 + 24,
-        ]}
-        pictureRotation={[0, Math.PI * 0.5, 0]}
         color="black"
-        textColor="white"
         fieldName="twitter"
         currentSNS={portofolio.sns}
         pictureUrl="/x.png"
@@ -625,10 +601,7 @@ export default function Room({ username, portofolio }: Props) {
         portofolio={portofolio}
         framePosition={[60, wallYPosition * SCALE, -120 + 1.1]}
         frameRotation={[0, 0, 0]}
-        picturePosition={[60, wallYPosition * SCALE, -120 + 1.5]}
-        pictureRotation={[0, 0, 0]}
         color="white"
-        textColor="black"
         fieldName="github"
         currentSNS={portofolio.sns}
         pictureUrl="/github.png"
