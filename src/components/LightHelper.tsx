@@ -80,7 +80,7 @@ function WallMuseumLight({
 
         <pointLight
           position={[0, -11, -7]}
-          intensity={150}
+          intensity={200}
           distance={40}
           decay={1.5}
           color="#FFDCA9" 

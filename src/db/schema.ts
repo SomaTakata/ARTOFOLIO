@@ -5,8 +5,8 @@ const initialSkills = [
        { name: "React", level: "5" },
        { name: "Tailwind", level: "3" },
        { name: "Vue", level: "1" },
-       { name: "Auth.js", level: "3" },
-       { name: "Supabase", level: "4" },
+       { name: "Svelte", level: "3" },
+       { name: "PostgreSQL", level: "4" },
 ];
 
 const initialWorks = [

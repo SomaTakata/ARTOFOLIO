@@ -1,0 +1,1 @@
+ALTER TABLE "user" ALTER COLUMN "skills" SET DEFAULT '[{"name":"React","level":"5"},{"name":"Tailwind","level":"3"},{"name":"Vue","level":"1"},{"name":"Svelte","level":"3"},{"name":"PostgreSQL","level":"4"}]'::jsonb;
