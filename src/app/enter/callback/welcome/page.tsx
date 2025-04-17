@@ -6,20 +6,23 @@ import { redirect } from "next/navigation";
 
 export default async function Page() {
   const session = await auth.api.getSession({
-    headers: await headers()
-  })
+    headers: await headers(),
+  });
 
   if (!session || !session.user?.id) {
     redirect("/");
+    // リダイレクト後のコードは実行されないので、ここで終了する想定
   }
+
+  // ヘッダーを一度取得して再利用
+  const headerData = await headers();
 
   const res = await fetch(`${env.NEXT_PUBLIC_APP_URL}/api/me/username`, {
     method: "GET",
-    headers: await headers()
-  })
+    headers: headerData,
+  });
 
   const { username } = await res.json();
-
   if (username) {
     redirect(`/${username}`);
   }
