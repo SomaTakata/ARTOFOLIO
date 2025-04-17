@@ -164,7 +164,7 @@ export default function EditSkillsButton({
                         <RadioGroup
                           onValueChange={field.onChange}
                           defaultValue={field.value}
-                          className="flex"
+                          className="flex flex-wrap"
                         >
                           {techs.map((tech) => (
                             <FormItem

@@ -58,11 +58,11 @@ export const portofolioSchema = UserSelectSchema.pick({
 });
 
 export const SnsSchema = z.object({
-  qiita: z.string().url().or(z.literal("")),
-  zenn: z.string().url().or(z.literal("")),
+  linkedin: z.string().url().or(z.literal("")),
+  facebook: z.string().url().or(z.literal("")),
   github: z.string().url().or(z.literal("")),
-  twitter: z.string().url().or(z.literal("")),
-  otherwise: z.string().url().or(z.literal(""))
+  x: z.string().url().or(z.literal("")),
+  other: z.string().url().or(z.literal(""))
 })
 
 export const UpdateWorkPayloadSchema = z.object({

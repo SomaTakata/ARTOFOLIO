@@ -1,0 +1,1 @@
+ALTER TABLE "user" ALTER COLUMN "skills" SET DEFAULT '[{"name":"Next.js","level":"5"},{"name":"Tailwind","level":"3"},{"name":"Prisma","level":"1"},{"name":"Auth.js","level":"3"},{"name":"Supabase","level":"4"}]'::jsonb;
