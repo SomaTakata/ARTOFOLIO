@@ -5,23 +5,27 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
+  // ヘッダーを一度だけ取得して変数に保存
+  const headerData = await headers();
+
   const session = await auth.api.getSession({
-    headers: await headers()
-  })
+    headers: headerData,
+  });
 
   if (!session || !session.user?.id) {
-    redirect("/");
+    return redirect("/");
   }
 
+  // 同じヘッダー変数を再利用
   const res = await fetch(`${env.NEXT_PUBLIC_APP_URL}/api/me/username`, {
     method: "GET",
-    headers: await headers()
-  })
+    headers: headerData,
+  });
 
-  const { username } = await res.json();
+  const data = await res.json();
 
-  if (username) {
-    redirect(`/${username}`);
+  if (data.username) {
+    return redirect(`/${data.username}`);
   }
 
   return (
