@@ -31,3 +31,4 @@ Register your preferred tech stack.
 You can also display your past works along with images.
 <img width="1512" alt="スクリーンショット 2025-04-18 0 17 00" src="https://github.com/user-attachments/assets/63f9cf25-bee9-426e-b2e1-6d22e6b0de26" />
 
+Complete your museum by setting up social links, and spread the word by sharing it with others.
