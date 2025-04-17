@@ -1,7 +1,6 @@
 import ProfileTop from "@/components/templates/ProfileTop/ProfileTop";
 import { env } from "@/env.mjs";
 import { ProfileWithTypedSkills } from "@/server/models/user.schema";
-import { headers } from "next/headers";
 
 type Props = {
   params: Promise<{
@@ -15,7 +14,6 @@ export default async function Page({ params }: Props) {
     `${env.NEXT_PUBLIC_APP_URL}/api/profile/${username}`,
     {
       method: "GET",
-      headers: await headers(),
     }
   );
 
