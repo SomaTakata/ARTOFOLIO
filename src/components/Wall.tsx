@@ -40,7 +40,6 @@ export default function Wall({
     map: "/textures/Plaster001_2K-JPG_Color.jpg",
     normalMap: "/textures/Plaster001_2K-JPG_NormalGL.jpg",
     roughnessMap: "/textures/Plaster001_2K-JPG_Roughness.jpg",
-    // displacementMap: "/textures/Plaster001_2K-JPG_Displacement.jpg", // 削除
   });
 
   useEffect(() => {
@@ -48,8 +47,6 @@ export default function Wall({
       if (texture) {
         texture.wrapS = texture.wrapT = RepeatWrapping;
         texture.repeat.set(textureRepeat[0], textureRepeat[1]);
-        // オプション: テクスチャ異方性フィルタリング (品質向上)
-        // texture.anisotropy = 16;
       }
     });
   }, [textures, textureRepeat]);
@@ -109,8 +106,6 @@ export default function Wall({
         <planeGeometry args={[width, height]} /> {/* 細分化を削除 */}
         <meshPhysicalMaterial
           {...frontSettings}
-          // clearcoat={isBlack ? 0.1 : 0.05} // 削除
-          // clearcoatRoughness={0.8} // 削除
         />
       </mesh>
       {/* 裏面 - 細分化と clearcoat を削除 */}
@@ -123,8 +118,6 @@ export default function Wall({
         <planeGeometry args={[width, height]} /> {/* 細分化を削除 */}
         <meshPhysicalMaterial
           {...backSettings}
-          // clearcoat={isBackBlack ? 0.1 : 0.05} // 削除
-          // clearcoatRoughness={0.8} // 削除
         />
       </mesh>
     </group>

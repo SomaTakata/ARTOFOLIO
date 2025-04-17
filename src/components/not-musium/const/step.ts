@@ -9,7 +9,7 @@ export const STEP = [
     number: 2,
     title: "Design your museum",
     desc: "Let’s showcase your skills, tech stack, social media links, and past projects in your very own museum.",
-    image: "https://picsum.photos/200/300"
+    image: "/step-2.png"
   },
   {
     number: 3,

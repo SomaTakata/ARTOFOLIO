@@ -24,7 +24,7 @@ const mainApp = new OpenAPIHono()
   .route("/username/check", checkUserApp)
   .route("/profile", profileApp)
 
-const route = app.route("/", mainApp);
+app.route("/", mainApp);
 
 app.doc("/specification", {
   openapi: "3.0.0",
@@ -33,5 +33,4 @@ app.doc("/specification", {
 
 app.get("/doc", swaggerUI({ url: "/api/specification" }));
 
-export type AppType = typeof route;
 export default app;

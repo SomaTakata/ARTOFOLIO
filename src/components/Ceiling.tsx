@@ -1,14 +1,8 @@
 // Ceiling.tsx - 天井全体に均等に配置したライト
 import { usePlane } from "@react-three/cannon";
-import { useRef } from "react";
-import { DirectionalLight } from "three";
 import { SCALE, wallHeight } from "./Room";
 
 export function Ceiling() {
-  // 方向光源の参照
-  const mainLightRef = useRef<DirectionalLight>(null);
-  const secondaryLightRef = useRef<DirectionalLight>(null);
-
   // 天井の平面
   const [ref] = usePlane(() => ({
     type: "Static",

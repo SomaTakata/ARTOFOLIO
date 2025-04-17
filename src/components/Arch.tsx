@@ -9,12 +9,14 @@ function TopBoard({
   rotation = [0, 0, 0],
   logoRotation = [0, 0, 0],
   logoPosition = [0, 0, 0],
+  lightPosition = [0, 0, 0],
   materialProps, // マテリアルの設定を受け取る
 }: {
   position?: [number, number, number];
   rotation?: [number, number, number];
   logoRotation?: [number, number, number];
   logoPosition?: [number, number, number];
+  lightPosition?: [number, number, number];
   materialProps: object; // マテリアル設定の型 (より具体的にしても良い)
 }) {
   // ロゴ画像のテクスチャ
@@ -28,6 +30,8 @@ function TopBoard({
         {/* ロゴはテクスチャがメインなので StandardMaterial のまま */}
         <meshStandardMaterial map={logoTexture.map} transparent={true} />
       </mesh>
+
+      <pointLight intensity={200} position={lightPosition} rotation={logoRotation} />
 
       {/* アーチ上部のボード本体 - 受け取ったマテリアル設定を適用 */}
       <mesh position={position} rotation={rotation} castShadow receiveShadow>
@@ -49,6 +53,7 @@ export default function Arch({
   tRotation = [0, 0, 0],
   logoRotation = [0, 0, 0],
   logoPosition = [0, 0, 0],
+  lightPosition = [0, 0, 0],
 }: {
   lPosition?: [number, number, number];
   lRotation?: [number, number, number];
@@ -58,6 +63,7 @@ export default function Arch({
   tRotation?: [number, number, number];
   logoRotation?: [number, number, number];
   logoPosition?: [number, number, number];
+  lightPosition?: [number, number, number];
 }) {
   // Wall と同じテクスチャをロード (displacementMap は不要)
   const textures = useTexture({
@@ -91,6 +97,7 @@ export default function Arch({
         rotation={tRotation}
         logoRotation={logoRotation}
         logoPosition={logoPosition}
+        lightPosition={lightPosition}
         materialProps={archMaterialSettings} // 設定を渡す
       />
 

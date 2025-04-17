@@ -1,5 +1,5 @@
 "use client";
-import { Html, Text } from "@react-three/drei";
+import { Html, RoundedBox, Text } from "@react-three/drei";
 import { SCALE, wallYPosition } from "./Room";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import {
@@ -50,6 +50,11 @@ type Props = {
   fieldName: SNSField,
   pictureUrl: string
 };
+
+function capitalizeFirst(str: string): string {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 export default function EditLinksButton({
   color = "black",
@@ -107,8 +112,6 @@ export default function EditLinksButton({
   const onSubmit = async (data: SingleLinkFormData) => {
     const updatedSNS: SnsSchemaType = { ...currentSNS, [fieldName]: data.link };
 
-    console.log(updatedSNS)
-    console.log(currentSNS)
     try {
       const res = await fetch("/api/profile/links", {
         method: "PUT",
@@ -124,6 +127,7 @@ export default function EditLinksButton({
         return;
       }
       router.refresh();
+      setShowPopup(false);
     } catch (error) {
       console.error(`Error updating ${fieldName}:`, error);
     }
@@ -132,18 +136,18 @@ export default function EditLinksButton({
 
   return (
     <group>
-        {(portofolio.editable || portofolio.sns[fieldName] !== "") && ( <mesh
+      {(portofolio.editable || portofolio.sns[fieldName] !== "") && (<mesh
         castShadow
         onClick={() => {
           setShowPopup(true);
         }}
+        onPointerOver={() => (document.body.style.cursor = "pointer")}
+        onPointerOut={() => (document.body.style.cursor = "default")}
       >
         <Painting
           pictureUrl={pictureUrl}
           framePostion={framePosition}
           frameRotation={frameRotation}
-          picturePosition={picturePosition}
-          pictureRotation={pictureRotation}
           frameColor={color}
         />
       </mesh>)}
@@ -152,26 +156,41 @@ export default function EditLinksButton({
         position={[framePosition[0], framePosition[1] - 15, framePosition[2]]}
         rotation={frameRotation}
       >
-        <mesh>
-          <planeGeometry args={[15, 3]} />
-          <meshStandardMaterial color={color} />
-        </mesh>
-        <ClickableLink
+        <RoundedBox args={[15, 3, 0.5]} radius={0.4} smoothness={4} castShadow>
+          <meshStandardMaterial
+            color={"black"}
+            metalness={1.0}
+            roughness={0.05}
+          />
+        </RoundedBox>
+        {portofolio.sns[fieldName] !== "" && <ClickableLink
           position={[0, 0, 0]}
           url={portofolio.sns[fieldName]}
         >
           <Text
-            position={[0, 0, 0.1]}
+            position={[0, 0, 0.3]}
             fontSize={1.2}
-            color={textColor}
+            color="#ffffff"
             anchorX="center"
             anchorY="middle"
             fontWeight={700}
           >
-            {portofolio.sns[fieldName] && "🔗"}{fieldName}
+            🔗{capitalizeFirst(fieldName)}
 
           </Text>
-        </ClickableLink>
+        </ClickableLink>}
+        {portofolio.sns[fieldName] == "" &&
+          <Text
+            position={[0, 0, 0.3]}
+            fontSize={1.2}
+            color="#ffffff"
+            anchorX="center"
+            anchorY="middle"
+            fontWeight={700}
+          >
+            {capitalizeFirst(fieldName)}
+          </Text>
+        }
       </group>)}
 
       <Html>
@@ -200,7 +219,9 @@ export default function EditLinksButton({
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">Update</Button>
+                <Button disabled={form.formState.isSubmitting} type="submit" className="w-full cursor-pointer">
+                  {form.formState.isSubmitting ? "Sending..." : "Update"}
+                </Button>
               </form>
             </Form>
           </DialogContent>

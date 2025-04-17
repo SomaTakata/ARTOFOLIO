@@ -1,12 +1,14 @@
-import { useRef } from "react";
-import { useHelper } from "@react-three/drei";
-import { PointLightHelper } from "three";
+type Props = {
+  position: [number, number, number];
+  rotation: [number, number, number];
+  isWhiteHandle?: boolean;
+}
 
 function WallMuseumLight({
   position = [0, 0, 0],
   rotation = [0, 0, 0],
   isWhiteHandle = false,
-}) {
+}: Props) {
   // Handle color based on the new parameter
   const handleColor = isWhiteHandle ? "#FFFFFF" : "#333333";
 
@@ -18,7 +20,6 @@ function WallMuseumLight({
         <meshStandardMaterial color="#222222" />
       </mesh>
 
-      {/* Horizontal arm extending from wall - with color toggle */}
       <mesh position={[0, 0, 1.2]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[0.15, 0.15, 2.4, 16]} />
         <meshStandardMaterial
@@ -28,7 +29,6 @@ function WallMuseumLight({
         />
       </mesh>
 
-      {/* Arm joint - with color toggle */}
       <mesh position={[0, 0, 2.4]}>
         <sphereGeometry args={[0.2, 16, 16]} />
         <meshStandardMaterial
@@ -38,7 +38,6 @@ function WallMuseumLight({
         />
       </mesh>
 
-      {/* Arm extending downward at angle - with color toggle */}
       <mesh position={[0, -0.5, 2.8]} rotation={[Math.PI / 6, 0, 0]}>
         <cylinderGeometry args={[0.12, 0.12, 1.2, 16]} />
         <meshStandardMaterial
@@ -48,7 +47,6 @@ function WallMuseumLight({
         />
       </mesh>
 
-      {/* Light housing - positioned to aim at painting */}
       <group position={[0, -1.1, 3.2]} rotation={[-Math.PI / 4, 0, 0]}>
         {/* Main housing body */}
         <mesh rotation={[Math.PI / 2, 0, 0]}>
@@ -60,7 +58,6 @@ function WallMuseumLight({
           />
         </mesh>
 
-        {/* Inner reflective part */}
         <mesh position={[0, 0, 0.2]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.45, 0.3, 0.3, 32]} />
           <meshStandardMaterial
@@ -72,7 +69,6 @@ function WallMuseumLight({
           />
         </mesh>
 
-        {/* Light bulb */}
         <mesh position={[0, 0, 0]}>
           <sphereGeometry args={[0.2, 16, 16]} />
           <meshStandardMaterial
@@ -82,12 +78,12 @@ function WallMuseumLight({
           />
         </mesh>
 
-        {/* The actual light source with increased distance for wider spread */}
         <pointLight
           position={[0, -11, -7]}
-          intensity={250}
-          distance={45}
+          intensity={200}
+          distance={40}
           decay={1.5}
+          color="#FFDCA9" 
         />
       </group>
     </group>

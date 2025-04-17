@@ -1,5 +1,4 @@
 import { Text } from "@react-three/drei";
-import { SCALE, wallYPosition } from "./Room";
 
 export default function AreaTitle({
   titlePositon = [0, 0, 0],
