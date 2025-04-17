@@ -22,7 +22,7 @@ export default function Hero() {
         <h2 className="text-6xl font-bold mb-[30px]">Your own 3d <AuroraText>beautiful</AuroraText> museum
           <br /> on the web.</h2>
         <p className="text-xl mb-[30px] text-gray-500">
-          Artfolio is a portfolio service for engineers that beautifully showcases your projects,
+          Artofolio is a portfolio service for engineers that beautifully showcases your projects,
           technical skills, and social media links—just like an art museum.
         </p>
         <div className="mb-[30px] relative z-[100]">
@@ -34,7 +34,7 @@ export default function Hero() {
         </div>
         <Link href="/login">
           <Safari
-            url="artfolio.vercel.app/museum/y_ta"
+            url="artofolio.vercel.app/museum/y_ta"
             imageSrc="/hero.png"
             className="size-full z-[100] relative shadow-2xl transition-transform duration-300 cursor-pointer hover:scale-[1.03]"
           />

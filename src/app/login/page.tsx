@@ -59,7 +59,7 @@ export default function Login() {
             )}
           />
           <Label htmlFor="terms" className="ml-2">
-            Agree to <Link href="/" className="cursor-pointer underline">Terms and Conditions</Link>
+            Agree to <Link href="https://quirky-orbit-97d.notion.site/ARTOFOLIO-Terms-and-Privacy-Policy-1d84f56fe52480f883c5ef68c63e39ae?pvs=4" className="cursor-pointer underline">Terms and Conditions</Link>
           </Label>
         </div>
 

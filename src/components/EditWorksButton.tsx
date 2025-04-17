@@ -212,7 +212,7 @@ export default function EditWorksButton({
                       }
                     `}
                   >
-                    {formState.isSubmitting ? "sending" : "Update"}
+                    {formState.isSubmitting ? "Sending..." : "Update"}
                   </Button>
                 </form>
               </Form>

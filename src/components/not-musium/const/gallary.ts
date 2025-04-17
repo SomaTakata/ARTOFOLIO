@@ -8,7 +8,7 @@ export const GALLARY = [
   {
     title: "This is Soma's museum.",
     desc: "I’m conducting research on VR at university.",
-    image: "/showcase-1.png",
+    image: "/showcase-2.png",
     link: "/"
   }
 ]
