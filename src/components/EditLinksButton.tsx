@@ -41,11 +41,8 @@ type Props = {
   editNum: number;
   portofolio: ProfileWithTypedSkills;
   color?: string;
-  textColor?: string;
   framePosition?: [number, number, number];
   frameRotation?: [number, number, number];
-  picturePosition?: [number, number, number];
-  pictureRotation?: [number, number, number];
   currentSNS: SnsSchemaType,
   fieldName: SNSField,
   pictureUrl: string
@@ -58,19 +55,12 @@ function capitalizeFirst(str: string): string {
 
 export default function EditLinksButton({
   color = "black",
-  textColor = "white",
   framePosition = [
     -45 * SCALE + 0.5,
     wallYPosition * SCALE,
     120 - 26 - 24 - 23 - 24 - 23 - 12,
   ],
   frameRotation = [0, Math.PI * 0.5, 0],
-  picturePosition = [
-    -45 * SCALE + 1.1,
-    wallYPosition * SCALE,
-    120 - 26 - 24 - 23 - 24 - 23 - 12,
-  ],
-  pictureRotation = [0, Math.PI * 0.5, 0],
   currentSNS,
   fieldName,
   pictureUrl,

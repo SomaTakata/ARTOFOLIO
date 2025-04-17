@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
+import Image from "next/image";
 
 type Props = {
   number: number;
@@ -34,9 +35,11 @@ export default function HowToUseCard({
       <div className="md:w-1/2">
         <div className="relative">
           <div className="aspect-video w-full rounded-xl overflow-hidden glass shadow-md">
-            <img
+            <Image
               src={image}
               alt={`${title}`}
+              width={300}
+              height={200}
               className="w-full h-full object-cover opacity-80 border-[2px] rounded-xl"
             />
           </div>

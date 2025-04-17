@@ -176,7 +176,7 @@ export default function EditWorksButton({
                           <Input type="url" placeholder="https://example.com" {...field} className="w-full" />
                         </FormControl>
                         <FormDescription>
-                          It's okay if your work doesn't have a URL.
+                          It&apos;s fine to leave this blank if there is no URL.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
