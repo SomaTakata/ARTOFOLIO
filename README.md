@@ -1,4 +1,3 @@
-
 # Overview
 
 Artofolio is a portfolio service for engineers that beautifully showcases your projects, technical skills, and social media links—just like an art museum.
@@ -22,4 +21,13 @@ I’ve entered my own museum.
 
 First, let’s register a brief self-introduction on the entrance wall.
 <img width="1512" alt="スクリーンショット 2025-04-18 0 14 34" src="https://github.com/user-attachments/assets/11bef74d-0df4-4cfd-b797-9a82faceedf9" />
+
+I was able to register it.
+<img width="1512" alt="スクリーンショット 2025-04-18 0 56 54" src="https://github.com/user-attachments/assets/805eaaf9-efd7-48f2-8634-5345db368b5e" />
+
+Register your preferred tech stack.
+<img width="1512" alt="スクリーンショット 2025-04-18 0 15 03" src="https://github.com/user-attachments/assets/814f0555-d60d-444a-b361-9810897a9eea" />
+
+You can also display your past works along with images.
+<img width="1512" alt="スクリーンショット 2025-04-18 0 17 00" src="https://github.com/user-attachments/assets/63f9cf25-bee9-426e-b2e1-6d22e6b0de26" />
 
