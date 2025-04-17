@@ -10,15 +10,12 @@ type Props = {
 };
 
 export default async function Page({ params }: Props) {
-  // ヘッダーを一度だけ取得
-  const headerData = await headers();
   const { username } = await params;
-
   const res = await fetch(
     `${env.NEXT_PUBLIC_APP_URL}/api/profile/${username}`,
     {
       method: "GET",
-      headers: headerData,
+      headers: await headers(),
     }
   );
 
