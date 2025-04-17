@@ -110,7 +110,7 @@ export default function CombinedControls({
             variant={cameraMode === "player" ? "default" : "outline"}
             size="sm"
             onClick={() => setCameraMode("player")}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 cursor-pointer"
           >
             <Crosshair size={16} /> Player
           </Button>
@@ -118,7 +118,7 @@ export default function CombinedControls({
             variant={cameraMode === "orbit" ? "default" : "outline"}
             size="sm"
             onClick={() => setCameraMode("orbit")}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 cursor-pointer"
           >
             <Orbit size={16} /> Orbit
           </Button>
@@ -139,7 +139,7 @@ export default function CombinedControls({
                   variant={currentLocation === key ? "default" : "outline"}
                   size="sm"
                   onClick={() => teleport(key)}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1 cursor-pointer"
                 >
                   <Icon size={14} /> {location.label}
                 </Button>
@@ -159,7 +159,7 @@ export default function CombinedControls({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex items-center justify-between gap-2"
+                  className="flex items-center justify-between gap-2 cursor-pointer"
                 >
                   <User size={14} /> {currentUser}
                 </Button>
@@ -168,7 +168,7 @@ export default function CombinedControls({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="w-full flex items-center justify-between"
+                  className="w-full flex items-center justify-between cursor-pointer"
                   onClick={handleLogout}
                   disabled={isLoggingOut}
                 >
@@ -181,9 +181,9 @@ export default function CombinedControls({
             <Button
               variant="outline"
               size="sm"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 cursor-pointer"
               onClick={async () => {
-                await signIn(`/${portofolio.username}`);
+                await signIn(`/museum/${portofolio.username}`);
               }}
             >
               <User size={14} /> Login

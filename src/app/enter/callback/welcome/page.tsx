@@ -13,7 +13,7 @@ export default async function Page() {
   });
 
   if (!session || !session.user?.id) {
-    redirect("/");
+    redirect("/login");
   }
 
   const res = await fetch(`${env.NEXT_PUBLIC_APP_URL}/api/me/username`, {
@@ -24,7 +24,7 @@ export default async function Page() {
   const { username } = await res.json();
 
   if (username) {
-    redirect(`/${username}`);
+    redirect(`/museum/${username}`);
   }
 
   return (

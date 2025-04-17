@@ -17,7 +17,7 @@ export default function WelcomeMessage({ username }: Props) {
         </p>
         <div className="flex justify-center">
           <Button asChild>
-            <Link href={`${env.NEXT_PUBLIC_APP_URL}/${username}`}>Enter your museum</Link>
+            <Link href={`${env.NEXT_PUBLIC_APP_URL}/museum/${username}`}>Enter your museum</Link>
           </Button>
         </div>
       </div>

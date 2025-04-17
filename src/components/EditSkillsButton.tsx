@@ -29,7 +29,8 @@ export const techs = [
   "Vue",
   "Auth.js",
   "Tailwind",
-  "Supabase",
+  "PostgreSQL",
+  "Svelte"
 ] as const;
 
 type FormData = z.infer<typeof SkillSchema>;
@@ -100,7 +101,7 @@ export default function EditSkillsButton({
           onPointerOut={() => (document.body.style.cursor = "default")}
         >
           <Painting
-            pictureUrl={`${skills[editNum].name}.png`}
+            pictureUrl={`/${skills[editNum].name}.png`}
             framePostion={framePosition}
             frameRotation={frameRotation}
             frameColor={color}
@@ -108,7 +109,7 @@ export default function EditSkillsButton({
         </mesh>
       ) : (
         <Painting
-          pictureUrl={`${skills[editNum].name}.png`}
+          pictureUrl={`/${skills[editNum].name}.png`}
           framePostion={framePosition}
           frameRotation={frameRotation}
           frameColor={color}

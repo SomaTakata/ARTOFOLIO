@@ -1,5 +1,4 @@
-import { relations } from 'drizzle-orm';
-import { boolean, integer, json, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 const initialSkills = [
        { name: "React", level: "5" },
@@ -94,48 +93,3 @@ export const verification = pgTable("verification", {
        createdAt: timestamp('created_at'),
        updatedAt: timestamp('updated_at')
 });
-
-export const skill = pgTable("skill", {
-       id: text("id").primaryKey(),
-       name: text('name').notNull(),
-       level: integer('level').notNull(),
-       userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' })
-});
-
-export const experience = pgTable("experience", {
-       startPeriod: timestamp('start_period').notNull(),
-       endPeriod: timestamp('end_period').notNull(),
-       title: text('title').notNull(),
-       desc: text('desc').notNull(),
-       userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' })
-})
-
-export const work = pgTable("work", {
-       id: text("id").primaryKey(),
-       title: text('title').notNull(),
-       desc: text('desc').notNull(),
-       siteUrl: text('site_url').notNull(),
-       techs: json('techs').notNull(),
-       userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' })
-})
-
-export const skillRelations = relations(skill, ({ one }) => ({
-       user: one(user, {
-              fields: [skill.userId],
-              references: [user.id],
-       }),
-}));
-
-export const experienceRelations = relations(experience, ({ one }) => ({
-       user: one(user, {
-              fields: [experience.userId],
-              references: [user.id],
-       }),
-}));
-
-export const workRelations = relations(work, ({ one }) => ({
-       user: one(user, {
-              fields: [work.userId],
-              references: [user.id],
-       }),
-}));
