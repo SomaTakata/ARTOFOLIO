@@ -5,6 +5,11 @@ For this Next.js hackathon project, I chose a black-and-white color scheme for t
 
 <img width="1512" alt="スクリーンショット 2025-04-17 19 19 20" src="https://github.com/user-attachments/assets/95dc4a61-9e8a-4826-b5ff-7cecaa5aaa9d" />
 
+# Tech Stack
+Here's the tech stack I used to build Artofolio.
+
+![My Skills](https://go-skill-icons.vercel.app/api/icons?i=nextjs,tailwind,shadcn,threejs,betterauth,hono,drizzle,supabase)
+
 # How To Use
 ## The process of creating your museum
 
@@ -32,3 +37,5 @@ You can also display your past works along with images.
 <img width="1512" alt="スクリーンショット 2025-04-18 0 17 00" src="https://github.com/user-attachments/assets/63f9cf25-bee9-426e-b2e1-6d22e6b0de26" />
 
 Complete your museum by setting up social links, and spread the word by sharing it with others.
+
+
