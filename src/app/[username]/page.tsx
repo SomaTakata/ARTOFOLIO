@@ -1,7 +1,7 @@
 import ProfileTop from "@/components/templates/ProfileTop/ProfileTop";
 import { env } from "@/env.mjs";
 import { ProfileWithTypedSkills } from "@/server/models/user.schema";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 type Props = {
   params: Promise<{
@@ -11,11 +11,14 @@ type Props = {
 
 export default async function Page({ params }: Props) {
   const { username } = await params;
+
+  const cookieHeader = cookies().toString();
+
   const res = await fetch(
     `${env.NEXT_PUBLIC_APP_URL}/api/profile/${username}`,
     {
       method: "GET",
-      headers: await headers(),
+      headers: { cookie: cookieHeader },
     }
   );
 
