@@ -16,6 +16,7 @@ import { Vector3 } from "three";
 import { Physics, useSphere } from "@react-three/cannon";
 import { ProfileWithTypedSkills } from "@/server/models/user.schema";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Home,
   Orbit,
@@ -23,16 +24,7 @@ import {
   BookOpen,
   Briefcase,
   Link as LinkIcon,
-  User,
-  LogOut,
 } from "lucide-react";
-import { signIn, signOut } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 // 各テレポート地点の定義（位置と初期向きを含む）
 const LOCATIONS = {
@@ -298,7 +290,6 @@ function Player({
     if (velocity.length() > 0) {
       // Apply velocity directly through physics API
       api.velocity.set(velocity.x / delta, 0, velocity.z / delta);
-      console.log("Moving with velocity:", velocity);
     } else {
       // Stop if no keys are pressed
       api.velocity.set(0, 0, 0);
@@ -372,60 +363,30 @@ function CustomOrbitControls({ cameraMode, target }: OrbitControlsProps) {
   return <OrbitControls ref={controlsRef} />;
 }
 
-interface CombinedControlsProps {
+interface ControlsUIProps {
   cameraMode: CameraMode;
   setCameraMode: (mode: CameraMode) => void;
-  portofolio: ProfileWithTypedSkills;
-  
+  playerPosition: { x: number; y: number; z: number };
 }
 
 // UI Components for camera controls and teleport
-function CombinedControlsComponent({
+function ControlsUI({
   cameraMode,
   setCameraMode,
-  portofolio,
-}: CombinedControlsProps) {
+  playerPosition,
+}: ControlsUIProps) {
   // テレポート機能へのアクセス
   const { teleport, currentLocation } = useTeleport();
-  const router = useRouter();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [currentUser, setCurrentUser] = useState<string | null>(
-    portofolio.loginUser
-  );
-
-  // Update currentUser when portfolio prop changes
-  useEffect(() => {
-    setCurrentUser(portofolio.loginUser);
-  }, [portofolio.loginUser]);
-
-  // Handle logout with proper state management
-  const handleLogout = async () => {
-    try {
-      setIsLoggingOut(true);
-      await signOut();
-
-      // Update local state immediately
-      setCurrentUser(null);
-
-      // Force a refresh of the current page to ensure data is reloaded
-      router.refresh();
-    } catch (error) {
-      console.error("Logout failed:", error);
-    } finally {
-      setIsLoggingOut(false);
-    }
-  };
 
   return (
     <div className="fixed top-4 right-4 flex flex-col gap-2 z-10">
       <div className="bg-black/20 backdrop-blur-sm rounded-lg p-4 border border-white/10 flex flex-col gap-2">
-        {/* Camera Mode Controls */}
         <div className="flex gap-2">
           <Button
             variant={cameraMode === "player" ? "default" : "outline"}
             size="sm"
             onClick={() => setCameraMode("player")}
-            className="flex items-center gap-2 cursor-pointer"
+            className="flex items-center gap-2"
           >
             <Crosshair size={16} /> Player
           </Button>
@@ -433,17 +394,14 @@ function CombinedControlsComponent({
             variant={cameraMode === "orbit" ? "default" : "outline"}
             size="sm"
             onClick={() => setCameraMode("orbit")}
-            className="flex items-center gap-2 cursor-pointer"
+            className="flex items-center gap-2"
           >
             <Orbit size={16} /> Orbit
           </Button>
         </div>
 
-        {/* Teleport Controls */}
         <div className="flex flex-col gap-2 mt-2">
-          <h3 className="text-xs font-semibold opacity-70 text-white">
-            テレポート
-          </h3>
+          <h3 className="text-xs font-semibold opacity-70">テレポート</h3>
           <div className="grid grid-cols-2 gap-2">
             {(Object.keys(LOCATIONS) as Array<LocationKey>).map((key) => {
               const location = LOCATIONS[key];
@@ -454,7 +412,7 @@ function CombinedControlsComponent({
                   variant={currentLocation === key ? "default" : "outline"}
                   size="sm"
                   onClick={() => teleport(key)}
-                  className="flex items-center gap-1 cursor-pointer"
+                  className="flex items-center gap-1"
                 >
                   <Icon size={14} /> {location.label}
                 </Button>
@@ -463,47 +421,15 @@ function CombinedControlsComponent({
           </div>
         </div>
 
-        {/* User Account Controls */}
-        <div className="flex flex-col gap-2 mt-2 border-t border-white/10 pt-2">
-          <h3 className="text-xs font-semibold opacity-70 text-white">
-            Account
-          </h3>
-          {currentUser ? (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center justify-between gap-2 cursor-pointer"
-                >
-                  <User size={14} /> {currentUser}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="p-0 w-40" side="bottom" align="end">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full flex items-center justify-between cursor-pointer"
-                  onClick={handleLogout}
-                  disabled={isLoggingOut}
-                >
-                  <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>{" "}
-                  <LogOut size={14} />
-                </Button>
-              </PopoverContent>
-            </Popover>
-          ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2 cursor-pointer"
-              onClick={async () => {
-                await signIn(`/museum/${portofolio.username}`);
-              }}
-            >
-              <User size={14} /> Login
-            </Button>
-          )}
+        <div className="mt-2 text-sm">
+          <div className="flex flex-col gap-1">
+            <Badge variant="outline" className="flex justify-between">
+              <span>X:</span> <span>{playerPosition.x.toFixed(2)}</span>
+            </Badge>
+            <Badge variant="outline" className="flex justify-between">
+              <span>Z:</span> <span>{playerPosition.z.toFixed(2)}</span>
+            </Badge>
+          </div>
         </div>
       </div>
     </div>
@@ -521,7 +447,8 @@ const ProfileTop = ({ username, portofolio }: Props) => {
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
   const [cameraTarget, setCameraTarget] = useState<Vector3 | null>(null);
   const initialPosition = LOCATIONS.HOME.position.clone();
-  const [, setCurrentOffset] = useState({ x: 0, y: 0 });
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [currentOffset, setCurrentOffset] = useState({ x: 0, y: 0 });
   const [currentPosition, setCurrentPosition] = useState({
     x: initialPosition.x,
     y: initialPosition.y,
@@ -626,10 +553,10 @@ const ProfileTop = ({ username, portofolio }: Props) => {
   return (
     <TeleportContext.Provider value={teleportContextValue}>
       <div className="relative w-full h-screen overflow-hidden">
-        <CombinedControlsComponent
+        <ControlsUI
           cameraMode={cameraMode}
           setCameraMode={setCameraMode}
-          portofolio={portofolio}
+          playerPosition={currentPosition}
         />
 
         <Canvas
