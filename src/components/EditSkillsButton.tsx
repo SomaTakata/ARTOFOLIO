@@ -160,7 +160,7 @@ export default function EditSkillsButton({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tech Stack</FormLabel>
+                      <FormLabel>Tech Stack（The tech stack will continue to grow.）</FormLabel>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
