@@ -124,9 +124,6 @@ export const getPortofolioHandler: RouteHandler<typeof getPortofolioRoute> = asy
   } = result[0];
 
   const editable = userId === id
-  console.log(`userId: ${userId}`)
-  console.log(`id: ${id}`)
-  console.log(editable)
 
   return c.json(
     {
