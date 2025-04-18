@@ -1,52 +1,70 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { GizmoHelper, GizmoViewport, OrbitControls } from "@react-three/drei";
 import Room from "@/components/Room";
 import {
   useEffect,
   useRef,
   useState,
   createContext,
+  useContext,
   useCallback,
   useMemo,
 } from "react";
 import { Vector3 } from "three";
 import { Physics, useSphere } from "@react-three/cannon";
 import { ProfileWithTypedSkills } from "@/server/models/user.schema";
-import CombinedControls from "@/components/CombinedControls";
+import { Button } from "@/components/ui/button";
+import {
+  Home,
+  Orbit,
+  Crosshair,
+  BookOpen,
+  Briefcase,
+  Link as LinkIcon,
+  User,
+  LogOut,
+} from "lucide-react";
+import { signIn, signOut } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
-// Teleport locations definition
+// 各テレポート地点の定義（位置と初期向きを含む）
 const LOCATIONS = {
   HOME: {
     position: new Vector3(80, 14, 90),
     label: "Home",
-    icon: "Home",
-    yaw: Math.PI / 2, // East
+    icon: Home,
+    yaw: Math.PI / 2, // 東向き
   },
   SKILLS: {
     position: new Vector3(-60, 14, 60),
     label: "Skills",
-    icon: "BookOpen",
-    yaw: Math.PI, // South
+    icon: BookOpen,
+    yaw: Math.PI, // 南向き
   },
   WORKS: {
     position: new Vector3(-30, 14, -90),
     label: "Works",
-    icon: "Briefcase",
-    yaw: Math.PI / 2, // East
+    icon: Briefcase,
+    yaw: Math.PI / 2, // 東向き
   },
   LINKS: {
     position: new Vector3(30, 14, 30),
     label: "Links",
-    icon: "LinkIcon",
-    yaw: -Math.PI / 2, // West
+    icon: LinkIcon,
+    yaw: -Math.PI / 2, // 西向き
   },
 };
 
 type LocationKey = keyof typeof LOCATIONS;
 
-// Teleport context for function sharing
+// テレポート機能用のコンテキスト
 interface TeleportContextType {
   teleport: (locationKey: LocationKey) => void;
   currentLocation: LocationKey | null;
@@ -57,7 +75,12 @@ const TeleportContext = createContext<TeleportContextType>({
   currentLocation: null,
 });
 
-// Custom hook for keyboard input
+// カスタムフックでテレポートコンテキストを使用
+function useTeleport() {
+  return useContext(TeleportContext);
+}
+
+// キーボード入力を監視するカスタムフック
 const useKeyboardInput = () => {
   const keyState = useRef({
     ArrowUp: false,
@@ -103,7 +126,7 @@ interface PlayerProps {
   onStateChange: (state: PlayerState) => void;
   savedState: PlayerState | null;
   initialPosition: Vector3;
-  onPositionChange: (position: { x: number; y: number; z: number }) => void;
+  onPositionChange: (offset: { x: number; y: number }) => void;
   onTeleportReady: (handler: (locationKey: LocationKey) => void) => void;
 }
 
@@ -117,7 +140,11 @@ function Player({
 }: PlayerProps) {
   const keyState = useKeyboardInput();
   const walkCycle = useRef(0);
+
+  // テレポート要求を処理するための参照
   const resetRequested = useRef(false);
+
+  // Use saved yaw if available, otherwise default
   const yawRef = useRef(savedState?.rotation ?? LOCATIONS.HOME.yaw);
 
   // Use saved position if available, otherwise use initial
@@ -125,7 +152,10 @@ function Player({
     savedState?.position?.clone() ?? initialPosition.clone();
   const positionRef = useRef(startPosition);
 
-  // Physics sphere for collision detection
+  // Calculate room center
+  const roomCenter = useRef(new Vector3(80, 0, 80));
+
+  // Use a dynamic sphere instead of kinematic for proper collision detection
   const [ref, api] = useSphere(() => ({
     mass: 1,
     position: [startPosition.x, startPosition.y, startPosition.z],
@@ -137,87 +167,94 @@ function Player({
     },
   }));
 
-  // Expose teleport function to parent component
+  // テレポート機能を親コンポーネントに公開
   useEffect(() => {
-    // Teleport handler function
+    // テレポート処理関数
     const handleTeleport = (locationKey: LocationKey) => {
-      console.log(`Teleporting to: ${locationKey}`);
+      console.log(`テレポート開始: ${locationKey}`);
 
       const targetPosition = LOCATIONS[locationKey].position;
       const targetYaw = LOCATIONS[locationKey].yaw;
 
-      // Mark reset as requested
+      // リセット要求をフラグで記録
       resetRequested.current = true;
 
-      // Pause physics engine
+      // 物理エンジンを一時停止
       api.sleep();
 
-      // Reset velocities
+      // 速度をゼロに
       api.velocity.set(0, 0, 0);
       api.angularVelocity.set(0, 0, 0);
 
-      // Set orientation based on location
+      // 各地点に応じた向きをセット
       yawRef.current = targetYaw;
 
-      // Reset walk cycle
+      // 歩行サイクルをリセット
       walkCycle.current = 0;
 
-      // Reset position directly
+      // 位置を直接リセット
       api.position.set(targetPosition.x, targetPosition.y, targetPosition.z);
 
-      // Update position reference directly
+      // 参照位置を直接更新
       positionRef.current.copy(targetPosition);
 
-      // Resume physics engine
+      // 物理エンジンを再開
       api.wakeUp();
 
       console.log(
-        `Teleport complete: ${locationKey}, orientation: ${targetYaw}`,
+        `テレポート完了: ${locationKey}, 向き: ${targetYaw}`,
         targetPosition
       );
     };
 
-    // Pass teleport function to parent component
+    // テレポート関数を親コンポーネントに渡す
     onTeleportReady(handleTeleport);
   }, [api, onTeleportReady]);
 
-  // Subscribe to position changes from physics engine
+  // Subscribe to position changes from the physics engine
   useEffect(() => {
     const unsubscribe = api.position.subscribe((p) => {
       positionRef.current.set(p[0], p[1], p[2]);
 
-      // Report current position to parent
-      onPositionChange({
-        x: p[0],
-        y: p[1],
-        z: p[2],
-      });
+      // Calculate and report offset from center
+      const offset = {
+        x: p[0] - roomCenter.current.x,
+        y: p[2] - roomCenter.current.z,
+      };
+      onPositionChange(offset);
+
+      // Report current position
+      window.dispatchEvent(
+        new CustomEvent("playerPositionUpdate", {
+          detail: { x: p[0], y: p[1], z: p[2] },
+        })
+      );
     });
     return unsubscribe;
   }, [api.position, onPositionChange]);
 
   useFrame((state, delta) => {
-    // If reset is requested, update camera immediately
+    // リセットが要求されている場合はカメラを即座に更新
     if (resetRequested.current) {
-      // Set camera directly to player position
+      // カメラを直接プレイヤー位置に設定
       state.camera.position.copy(positionRef.current);
 
-      // Set camera orientation to the specified initial value
+      // カメラの向きも設定された初期値に
       state.camera.rotation.order = "YXZ";
       state.camera.rotation.y = yawRef.current;
       state.camera.rotation.x = 0;
       state.camera.rotation.z = 0;
 
-      // Clear reset request flag
+      // リセット要求フラグをクリア
       resetRequested.current = false;
 
       console.log(
-        "Camera position reset complete:",
+        "カメラ位置をリセット完了:",
         positionRef.current,
-        "orientation:",
+        "向き:",
         yawRef.current
       );
-      return; // Skip other processing
+      return; // 他の処理をスキップ
     }
 
     // Skip updates if in orbit mode
@@ -257,16 +294,17 @@ function Player({
       velocity.add(forward.clone().multiplyScalar(-movementSpeed * delta));
     }
 
-    // Apply velocity to physics body
+    // Apply velocity to the physics body
     if (velocity.length() > 0) {
       // Apply velocity directly through physics API
       api.velocity.set(velocity.x / delta, 0, velocity.z / delta);
+      console.log("Moving with velocity:", velocity);
     } else {
       // Stop if no keys are pressed
       api.velocity.set(0, 0, 0);
     }
 
-    // Apply head bobbing if moving (and not in reset)
+    // Apply head bobbing if moving (リセット中は行わない)
     let bobbingOffset = 0;
     if (
       (keyState.current.ArrowUp || keyState.current.ArrowDown) &&
@@ -278,7 +316,7 @@ function Player({
       bobbingOffset =
         Math.sin(walkCycle.current * bobbingFrequency) * bobbingAmplitude;
 
-      // Apply bobbing to y position via physics API
+      // Apply bobbing to the y position using the physics API
       api.position.set(
         positionRef.current.x,
         initialPosition.y + bobbingOffset,
@@ -294,10 +332,10 @@ function Player({
       );
     }
 
-    // Update first-person camera position immediately
+    // ファーストパーソン視点のためのカメラ位置を即座に更新
     state.camera.position.copy(positionRef.current);
 
-    // Update camera orientation
+    // カメラの向きを更新
     state.camera.rotation.order = "YXZ";
     state.camera.rotation.y = yaw;
     state.camera.rotation.x = 0;
@@ -318,24 +356,14 @@ interface OrbitControlsProps {
 
 // Custom OrbitControls that maintains camera state
 function CustomOrbitControls({ cameraMode, target }: OrbitControlsProps) {
-  // Reference to OrbitControls instance
+  // OrbitControlsのインスタンスを参照
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
 
   useEffect(() => {
     if (controlsRef.current && target) {
-      // Access OrbitControls target property
+      // OrbitControlsのtargetプロパティにアクセス
       controlsRef.current.target.copy(target);
-
-      // Set initial position higher (around 40)
-      if (controlsRef.current.object) {
-        const currentPos = controlsRef.current.object.position;
-        controlsRef.current.object.position.set(
-          currentPos.x,
-          Math.max(currentPos.y, 240),
-          currentPos.z
-        );
-      }
     }
   }, [target]);
 
@@ -344,24 +372,163 @@ function CustomOrbitControls({ cameraMode, target }: OrbitControlsProps) {
   return <OrbitControls ref={controlsRef} />;
 }
 
+interface CombinedControlsProps {
+  cameraMode: CameraMode;
+  setCameraMode: (mode: CameraMode) => void;
+  portofolio: ProfileWithTypedSkills;
+  
+}
+
+// UI Components for camera controls and teleport
+function CombinedControlsComponent({
+  cameraMode,
+  setCameraMode,
+  portofolio,
+}: CombinedControlsProps) {
+  // テレポート機能へのアクセス
+  const { teleport, currentLocation } = useTeleport();
+  const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [currentUser, setCurrentUser] = useState<string | null>(
+    portofolio.loginUser
+  );
+
+  // Update currentUser when portfolio prop changes
+  useEffect(() => {
+    setCurrentUser(portofolio.loginUser);
+  }, [portofolio.loginUser]);
+
+  // Handle logout with proper state management
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      await signOut();
+
+      // Update local state immediately
+      setCurrentUser(null);
+
+      // Force a refresh of the current page to ensure data is reloaded
+      router.refresh();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  return (
+    <div className="fixed top-4 right-4 flex flex-col gap-2 z-10">
+      <div className="bg-black/20 backdrop-blur-sm rounded-lg p-4 border border-white/10 flex flex-col gap-2">
+        {/* Camera Mode Controls */}
+        <div className="flex gap-2">
+          <Button
+            variant={cameraMode === "player" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setCameraMode("player")}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <Crosshair size={16} /> Player
+          </Button>
+          <Button
+            variant={cameraMode === "orbit" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setCameraMode("orbit")}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <Orbit size={16} /> Orbit
+          </Button>
+        </div>
+
+        {/* Teleport Controls */}
+        <div className="flex flex-col gap-2 mt-2">
+          <h3 className="text-xs font-semibold opacity-70 text-white">
+            テレポート
+          </h3>
+          <div className="grid grid-cols-2 gap-2">
+            {(Object.keys(LOCATIONS) as Array<LocationKey>).map((key) => {
+              const location = LOCATIONS[key];
+              const Icon = location.icon;
+              return (
+                <Button
+                  key={key}
+                  variant={currentLocation === key ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => teleport(key)}
+                  className="flex items-center gap-1 cursor-pointer"
+                >
+                  <Icon size={14} /> {location.label}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* User Account Controls */}
+        <div className="flex flex-col gap-2 mt-2 border-t border-white/10 pt-2">
+          <h3 className="text-xs font-semibold opacity-70 text-white">
+            Account
+          </h3>
+          {currentUser ? (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center justify-between gap-2 cursor-pointer"
+                >
+                  <User size={14} /> {currentUser}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="p-0 w-40" side="bottom" align="end">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full flex items-center justify-between cursor-pointer"
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                >
+                  <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>{" "}
+                  <LogOut size={14} />
+                </Button>
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2 cursor-pointer"
+              onClick={async () => {
+                await signIn(`/museum/${portofolio.username}`);
+              }}
+            >
+              <User size={14} /> Login
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 type Props = {
   username: string;
   portofolio: ProfileWithTypedSkills;
 };
 
 const ProfileTop = ({ username, portofolio }: Props) => {
-  // Camera and player state
+  // カメラとプレイヤーの状態
   const [cameraMode, setCameraMode] = useState<CameraMode>("player");
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
   const [cameraTarget, setCameraTarget] = useState<Vector3 | null>(null);
   const initialPosition = LOCATIONS.HOME.position.clone();
+  const [, setCurrentOffset] = useState({ x: 0, y: 0 });
   const [currentPosition, setCurrentPosition] = useState({
     x: initialPosition.x,
     y: initialPosition.y,
     z: initialPosition.z,
   });
 
-  // Teleport functionality state
+  // テレポート機能の状態
   const [teleportHandler, setTeleportHandler] = useState<
     ((locationKey: LocationKey) => void) | null
   >(null);
@@ -369,20 +536,20 @@ const ProfileTop = ({ username, portofolio }: Props) => {
     "HOME"
   );
 
-  // Teleport handler function
+  // テレポート処理関数
   const handleTeleport = useCallback(
     (locationKey: LocationKey) => {
       if (teleportHandler) {
         teleportHandler(locationKey);
         setCurrentLocation(locationKey);
       } else {
-        console.warn("Teleport handler not set");
+        console.warn("テレポートハンドラーが設定されていません");
       }
     },
     [teleportHandler]
   );
 
-  // Get teleport handler from player
+  // プレイヤーからテレポートハンドラを受け取る
   const handleSetTeleportHandler = useCallback(
     (handler: (locationKey: LocationKey) => void) => {
       setTeleportHandler(() => handler);
@@ -390,16 +557,37 @@ const ProfileTop = ({ username, portofolio }: Props) => {
     []
   );
 
-  // When switching to orbit mode, save player position as target for OrbitControls
+  // Listen for player position updates
+  useEffect(() => {
+    const handlePositionUpdate = (
+      e: CustomEvent<{ x: number; y: number; z: number }>
+    ) => {
+      setCurrentPosition(e.detail);
+    };
+
+    window.addEventListener(
+      "playerPositionUpdate",
+      handlePositionUpdate as EventListener
+    );
+
+    return () => {
+      window.removeEventListener(
+        "playerPositionUpdate",
+        handlePositionUpdate as EventListener
+      );
+    };
+  }, []);
+
+  // When switching to orbit mode, save the player position as target for OrbitControls
   useEffect(() => {
     if (cameraMode === "orbit" && playerState) {
       setCameraTarget(playerState.position);
     }
   }, [cameraMode, playerState]);
 
-  // Identify the closest location to the current position
+  // 現在地から最も近い地点を特定する処理
   useEffect(() => {
-    // Calculate distance to each location
+    // 各地点との距離を計算
     let closestLocation: LocationKey | null = null;
     let minDistance = Infinity;
 
@@ -410,23 +598,23 @@ const ProfileTop = ({ username, portofolio }: Props) => {
           Math.pow(currentPosition.z - pos.z, 2)
       );
 
-      // Record the closest location within range
+      // 一定範囲内で最も近い地点を記録
       if (distance < minDistance && distance < 20) {
         minDistance = distance;
         closestLocation = key as LocationKey;
       }
     });
 
-    // Update current location if closest location has changed
+    // 最も近い地点があれば現在地を更新
     if (closestLocation && closestLocation !== currentLocation) {
       setCurrentLocation(closestLocation);
     } else if (!closestLocation && currentLocation !== null) {
-      // If not near any location, set current location to null
+      // どの地点にも近くない場合は現在地をnullに
       setCurrentLocation(null);
     }
   }, [currentPosition, currentLocation]);
 
-  // Teleport context value
+  // テレポートコンテキスト値
   const teleportContextValue = useMemo(
     () => ({
       teleport: handleTeleport,
@@ -438,16 +626,14 @@ const ProfileTop = ({ username, portofolio }: Props) => {
   return (
     <TeleportContext.Provider value={teleportContextValue}>
       <div className="relative w-full h-screen overflow-hidden">
-        {/* Combined controls UI */}
-        <CombinedControls
+        <CombinedControlsComponent
           cameraMode={cameraMode}
           setCameraMode={setCameraMode}
-          teleport={handleTeleport}
-          currentLocation={currentLocation}
           portofolio={portofolio}
         />
 
         <Canvas
+          // shadows
           camera={{
             position: [initialPosition.x, initialPosition.y, initialPosition.z],
             fov: 45,
@@ -455,9 +641,14 @@ const ProfileTop = ({ username, portofolio }: Props) => {
             far: 1000,
           }}
         >
+          <ambientLight intensity={0.2} />
+          <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
+            <GizmoViewport />
+          </GizmoHelper>
+
           <CustomOrbitControls cameraMode={cameraMode} target={cameraTarget} />
 
-          {/* Physics simulation wrapper */}
+          {/* 物理シミュレーション用のラッパー */}
           <Physics>
             <Room username={username} portofolio={portofolio} />
             <Player
@@ -465,7 +656,7 @@ const ProfileTop = ({ username, portofolio }: Props) => {
               onStateChange={setPlayerState}
               savedState={playerState}
               initialPosition={initialPosition}
-              onPositionChange={setCurrentPosition}
+              onPositionChange={setCurrentOffset}
               onTeleportReady={handleSetTeleportHandler}
             />
           </Physics>
