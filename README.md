@@ -12,6 +12,7 @@ https://github.com/user-attachments/assets/73497134-0a8a-4157-ab31-6c1db6beb911
 # Key contribution
 
 - I paid special attention to the placement of lights and the texture of the walls to make it look like a real museum.
+- In the player’s perspective, the view slightly bobs up and down with each step to simulate the feeling of actually walking.
 - I generated the indoor plants in the museum using Luma AI. This was my first time incorporating Luma AI assets into a product with Three.js.
 - Inspired by the Next.js Hackathon, I designed the entire site — from the museum interior to the landing page — using black and white as the main theme.
 
