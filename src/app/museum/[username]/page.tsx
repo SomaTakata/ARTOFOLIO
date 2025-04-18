@@ -30,7 +30,6 @@ export default async function Page({ params }: Props) {
   }
 
   const portofolio: ProfileWithTypedSkills = await res.json();
-  console.log(portofolio)
 
   return (
     <>

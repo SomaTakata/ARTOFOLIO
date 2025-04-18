@@ -13,6 +13,8 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: z.string(),
     SUPABASE_URL: z.string().url(),
     SUPABASE_SERVICE_ROLE_KEY: z.string(),
+    API_DOC_BASIC_AUTH_USER: z.string(),
+    API_DOC_BASIC_AUTH_PASS: z.string()
   },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
@@ -23,5 +25,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    API_DOC_BASIC_AUTH_USER: process.env.API_DOC_BASIC_AUTH_USER,
+    API_DOC_BASIC_AUTH_PASS: process.env.API_DOC_BASIC_AUTH_PASS
   }
 });
